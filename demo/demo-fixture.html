@@ -18,8 +18,9 @@ limitations under the License.
 <!-- ft-element-demo element demo -->
 
 <!-- Imports -->
-<link rel="import" href="../../polymer/polymer.html">
 <link rel="import" href="../../iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../../polymer/polymer.html">
 
 <link rel="import" href="../ft-element-demo.html">
 
@@ -36,12 +37,44 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
 
         <style include="iron-flex iron-flex-alignment iron-positioning"></style>
 
-        <div
-                class="layout vertical center center-justified"
+        <ft-element-demo
                 style="width:100%; height:100%; ">
 
-            <ft-element-demo></ft-element-demo>
-        </div>
+            <div
+                    slot="config"
+                    class="layout vertical"
+                    style="width:300px; ">
+
+                <div>
+                    This panel lets you configure the element
+                </div>
+
+                <div style="height: 30px; "></div>
+
+                <paper-checkbox>
+                    First
+                </paper-checkbox>
+
+                <div style="height: 16px; "></div>
+
+                <paper-checkbox>
+                    Second
+                </paper-checkbox>
+
+                <div style="height: 16px; "></div>
+
+                <paper-checkbox>
+                    Third
+                </paper-checkbox>
+
+            </div>
+
+            <div
+                    slot="element">
+                Element
+            </div>
+
+        </ft-element-demo>
 
     </template>
 
