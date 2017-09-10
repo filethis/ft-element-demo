@@ -1,0 +1,19 @@
+{
+    "name": "ft-element-demo",
+    "description": "An element that can be used for the demo fixture for FileThis elements. Has a slot for the element to be demoed and a side bar for configuration options.",
+    "main": "ft-element-demo.html",
+    "dependencies": {
+        "polymer": "Polymer/polymer#1.9 - 2"
+    },
+    "devDependencies": {
+        "iron-component-page": "PolymerElements/iron-component-page#1 - 2",
+        "iron-demo-helpers": "PolymerElements/iron-demo-helpers#1 - 2",
+        "iron-test-helpers": "PolymerElements/iron-test-helpers#1 - 2",
+        "web-component-tester": "Polymer/web-component-tester#^6.0.0",
+        "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0"
+    },
+    "resolutions": {
+        "polymer": "1.9 - 2",
+        "webcomponentsjs": "^1.0.0"
+    }
+}
