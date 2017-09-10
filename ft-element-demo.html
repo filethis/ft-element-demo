@@ -55,23 +55,35 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                     class="layout vertical center"
                     style="width:100%; height:100%; ">
 
-                <!-- Fake viewport size menu -->
-                <paper-dropdown-menu label="Viewport" style="width:130px;">
-                    <paper-listbox
-                            class="dropdown-content"
-                            slot="dropdown-content"
-                            selected="{{_selectedViewportSizeIndex}}">
-                        <template is="dom-repeat" items="[[_viewportSizes]]" as="viewportSize">
-                            <paper-item>[[viewportSize.name]]</paper-item>
-                        </template>
-                    </paper-listbox>
-                </paper-dropdown-menu>
+                <!-- Fake viewport size -->
+                <div
+                        class="layout horizontal center">
+
+                    <!-- Menu -->
+                    <paper-dropdown-menu label="Viewport Size" style="width:130px; ">
+                        <paper-listbox
+                                class="dropdown-content"
+                                slot="dropdown-content"
+                                selected="{{selectedViewportSizeIndex}}">
+                            <template is="dom-repeat" items="[[viewportSizes]]" as="viewportSize">
+                                <paper-item>[[viewportSize.name]]</paper-item>
+                            </template>
+                        </paper-listbox>
+                    </paper-dropdown-menu>
+
+                    <div style="width:30px; "></div>
+
+                    <div>
+                        ([[viewportWidth]] x [[viewportHeight]])
+                    </div>
+
+                </div>
 
                 <!-- Element fake viewport -->
                 <div
                         id="fakeViewport"
-                        class="layout vertical center"
-                        style="width:600px; height:500px; border:1px solid #DDD; margin:16px; ">
+                        class="layout vertical center center-justified"
+                        style="width:600px; height:500px; border:1px solid black; margin:16px; ">
 
                     <!-- Element slot -->
                     <slot name="element"></slot>
@@ -91,9 +103,23 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
 
             properties: {
 
+                viewportWidth:
+                {
+                    type: Number,
+                    notify: true,
+                    value: 1024
+                },
+
+                viewportHeight:
+                {
+                    type: Number,
+                    notify: true,
+                    value: 768
+                },
+
                 // Viewport sizes ----------------------------
 
-                _viewportSizes:
+                viewportSizes:
                 {
                     type: Array,
                     notify: true,
@@ -132,24 +158,11 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                             name: "iPad Pro",
                             width: 1024,
                             height: 1366
-                        },
-                        {
-                            name: "Responsive",
-                            width: 1024,
-                            height: 1366
                         }
                     ]
                 },
 
-                _selectedViewportSize:
-                {
-                    type: String,
-                    notify: true,
-                    value: "1.0.0",
-                    observer: "_onSelectedViewportSizeChanged"
-                },
-
-                _selectedViewportSizeIndex:
+                selectedViewportSizeIndex:
                 {
                     type: Number,
                     notify: true,
@@ -158,50 +171,25 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                 }
             },
 
-            _onSelectedViewportSizeChanged: function(to, from)
-            {
-                // Update the popup selection
-                this._selectedViewportSizeIndex = this._mapViewportSizeToIndex(this._selectedViewportSize);
-
-                // Update viewportSize used by the form
-                this.$.userInteractionForm.viewportSize = this._selectedViewportSize;
-
-                // Load examples for this viewportSize
-                this._loadAllRequests();
-            },
-
-            _mapViewportSizeToIndex: function(viewportSize)
-            {
-                switch (viewportSize)
-                {
-                    case "1.0.0":
-                        return 0;
-                    case "2.0.0":
-                        return 1;
-                    default:
-                        throw new Error("Unknown user interaction schema viewportSize: " + viewportSize);
-                }
-            },
-
             _onSelectedViewportSizeIndexChanged: function(to, from)
             {
-                if (this._selectedViewportSizeIndex === null)
-                {
-                    this._selectedViewportSize = null;
-                    return;
-                }
+                var index = this.selectedViewportSizeIndex;
 
-                switch (this._selectedViewportSizeIndex)
-                {
-                    case 0:
-                        this._selectedViewportSize = "1.0.0";
-                        break;
-                    case 1:
-                        this._selectedViewportSize = "2.0.0";
-                        break;
-                    default:
-                        throw new Error("Invalid viewportSize index: " + this._selectedViewportSizeIndex.toString());
-                }
+                if (index === null)
+                    return;
+
+                var viewportSize = this.viewportSizes[index];
+                var viewportWidth = viewportSize.width;
+                var viewportHeight = viewportSize.height;
+
+                // Update the display of the size
+                this.viewportWidth = viewportWidth;
+                this.viewportHeight = viewportHeight;
+
+                // Update the fake viewport size
+                var fakeViewport = this.$.fakeViewport;
+                fakeViewport.style.width = viewportWidth + "px";
+                fakeViewport.style.height = viewportHeight + "px";
             }
 
         });
