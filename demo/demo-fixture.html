@@ -37,18 +37,41 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
 
         <style include="iron-flex iron-flex-alignment iron-positioning"></style>
 
+        <style>
+            :host {
+                display:block;
+            }
+        </style>
+
         <ft-element-demo
                 style="width:100%; height:100%; ">
 
             <div
                     slot="config"
-                    style="width:300px; text-align:center; ">
+                    style="width:300px; height:100%; text-align:center; padding-top:20px; ">
                 slot="config"
             </div>
 
             <div
-                    slot="element">
-                slot="element"
+                    slot="element"
+                    style="width:100%; height:100%; text-align:center; padding-top:20px; ">
+                <div>slot="element"</div>
+
+                <div style="height:20px; "></div>
+
+                <div
+                        class="layout vertical start"
+                        style="width:100%; ">
+
+                    <img src="img/beagle.png">
+                    <img src="img/dog-in-bowl.png">
+                    <img src="img/jack-russel.png">
+                    <img src="img/weimaraner.png">
+                    <img src="img/puppy-by-woodpile.png">
+                    <img src="img/jumping-over-mud.png">
+                </div>
+
+
             </div>
 
         </ft-element-demo>
