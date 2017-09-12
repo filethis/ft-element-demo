@@ -57,56 +57,53 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
 
             <!-- Element panel -->
             <div
-                    class="layout vertical center"
-                    style="width:100%; height:100%; background-color:indianred; ">
+                    id="elementPanel"
+                    style="width:100%; height:100%; ">
 
-                <div style="background-color:dodgerblue; ">
+                <!-- Size header -->
+                <div
+                        class="layout vertical center">
 
-                    <div class="layout vertical center">
-
-                        <!-- Size header -->
-                        <div
-                                class="layout horizontal center"
-                                style="margin-top:5px; background-color:greenyellow; ">
-
-                            <!-- Menu -->
-                            <paper-dropdown-menu label="Viewport Size" style="width:130px; ">
-                                <paper-listbox
-                                        class="dropdown-content"
-                                        slot="dropdown-content"
-                                        selected="{{selectedViewportSizeIndex}}">
-                                    <template is="dom-repeat" items="[[viewportSizes]]" as="viewportSize">
-                                        <paper-item>[[viewportSize.name]]</paper-item>
-                                    </template>
-                                </paper-listbox>
-                            </paper-dropdown-menu>
-
-                            <div style="width:30px; "></div>
-
-                            <!-- Dimensions display -->
-                            <div>
-                                ([[viewportWidth]] x [[viewportHeight]])
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div style="height:20px; "></div>
-
-                    <!-- Fake viewport -->
+                    <!-- Size header -->
                     <div
-                            id="fakeViewport"
-                            class="layout vertical center"
-                            style="margin:20px; border:1px solid black; overflow:auto; ">
+                            id="sizeHeader"
+                            class="layout horizontal center"
+                            style="padding-top:5px; padding-bottom:10px; ">
 
-                        <!-- Element slot -->
-                        <slot name="element"></slot>
+                        <!-- Menu -->
+                        <paper-dropdown-menu label="Viewport Size" style="width:130px; ">
+                            <paper-listbox
+                                    class="dropdown-content"
+                                    slot="dropdown-content"
+                                    selected="{{_selectedViewportSizeIndex}}">
+                                <template is="dom-repeat" items="[[_viewportSizes]]" as="viewportSize">
+                                    <paper-item>[[viewportSize.name]]</paper-item>
+                                </template>
+                            </paper-listbox>
+                        </paper-dropdown-menu>
+
+                        <div id="spacer" style="width:30px; "></div>
+
+                        <!-- Size display -->
+                        <div>
+                            ([[_viewportWidth]] x [[_viewportHeight]])
+                        </div>
+
                     </div>
+                </div>
+
+                <!-- Fake viewport -->
+                <div
+                        id="fakeViewport"
+                        class="layout vertical center"
+                        style="overflow:auto; ">
+
+                    <!-- Element slot -->
+                    <slot name="element"></slot>
                 </div>
             </div>
 
         </div>
-
 
     </template>
 
@@ -119,79 +116,86 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                 FileThis.ScrollingBehavior
             ],
 
+            listeners:
+            {
+                'iron-resize': '_onIronResizeThis'
+            },
+
             properties: {
 
-                viewportWidth:
-                {
-                    type: Number,
-                    notify: true,
-                    value: 1024
-                },
+                _viewportWidth:
+                    {
+                        type: Number
+                    },
 
-                viewportHeight:
-                {
-                    type: Number,
-                    notify: true,
-                    value: 768
-                },
+                _viewportHeight:
+                    {
+                        type: Number
+                    },
+
+                _isFullSize:
+                    {
+                        type: Boolean,
+                        value: true
+                    },
 
                 // Viewport sizes ----------------------------
 
-                viewportSizes:
-                {
-                    type: Array,
-                    notify: true,
-                    value: [
-                        {
-                            name: "Galaxy S5",
-                            width: 360,
-                            height: 640
-                        },
-                        {
-                            name: "Nexus",
-                            width: 412,
-                            height: 732
-                        },
-                        {
-                            name: "iPhone 5",
-                            width: 320,
-                            height: 568
-                        },
-                        {
-                            name: "iPhone 6",
-                            width: 375,
-                            height: 667
-                        },
-                        {
-                            name: "iPhone 6 Plus",
-                            width: 414,
-                            height: 736
-                        },
-                        {
-                            name: "iPad",
-                            width: 768,
-                            height: 1024
-                        },
-                        {
-                            name: "iPad Pro",
-                            width: 1024,
-                            height: 1366
-                        },
-                        {
-                            name: "Responsive",
-                            width: 0,
-                            height: 0
-                        }
-                    ]
-                },
+                _viewportSizes:
+                    {
+                        type: Array,
+                        notify: true,
+                        value: [
+                            {
+                                name: "Full",
+                                width: 0,
+                                height: 0
+                            },
+                            {
+                                name: "Galaxy S5",
+                                width: 360,
+                                height: 640
+                            },
+                            {
+                                name: "Nexus",
+                                width: 412,
+                                height: 732
+                            },
+                            {
+                                name: "iPhone 5",
+                                width: 320,
+                                height: 568
+                            },
+                            {
+                                name: "iPhone 6",
+                                width: 375,
+                                height: 667
+                            },
+                            {
+                                name: "iPhone 6 Plus",
+                                width: 414,
+                                height: 736
+                            },
+                            {
+                                name: "iPad",
+                                width: 768,
+                                height: 1024
+                            },
+                            {
+                                name: "iPad Pro",
+                                width: 1024,
+                                height: 1366
+                            }
+                        ]
+                    },
 
-                selectedViewportSizeIndex:
-                {
-                    type: Number,
-                    notify: true,
-                    value: "0",
-                    observer: "_onSelectedViewportSizeIndexChanged"
-                }
+                _selectedViewportSizeIndex:
+                    {
+                        type: Number,
+                        notify: true,
+                        value: 0,
+                        observer: "_onSelectedViewportSizeIndexChanged"
+                    }
             },
 
             ready: function()
@@ -207,44 +211,65 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
 
             _calculateScrollerHeight: function(scroller)
             {
-                // Don't adjust height
-                return -1;
+                if (!this._isFullSize)
+                    return -1; // Don't adjust height
+
+                // Adjust scroller height for height of size header above it
+                var sizeHeader = this.$.sizeHeader;
+                var sizeHeaderHeight = sizeHeader.offsetTop + sizeHeader.offsetHeight + 1;
+                return this.clientHeight - sizeHeaderHeight;
+            },
+
+            _onIronResizeThis: function(event)
+            {
+                var viewport = this.$.fakeViewport;
+                this._viewportWidth = viewport.offsetWidth;
+                this._viewportHeight = viewport.offsetHeight;
             },
 
             _onSelectedViewportSizeIndexChanged: function(to, from)
             {
-                var index = this.selectedViewportSizeIndex;
+                var index = this._selectedViewportSizeIndex;
 
                 if (index === null)
                     return;
 
-                var viewportSize = this.viewportSizes[index];
-                var viewportWidth = viewportSize.width;
-                var viewportHeight = viewportSize.height;
+                // Full size?
+                var isFullSize = (index === 0);
+                this._isFullSize = isFullSize;
 
-                // Update the display of the size
-                this.viewportWidth = viewportWidth;
-                this.viewportHeight = viewportHeight;
+                var viewport = this.$.fakeViewport;
 
-                // Update the fake viewport size
+                if (isFullSize)
+                {
+                    // Set full size
+                    viewport.style.width = "100%";
+                    viewport.style.height = "100%";
 
-                var fakeViewport = this.$.fakeViewport;
+                    // Border
+                    viewport.style.removeProperty("border");
+                    viewport.style.borderTop = "1px solid black";
 
-                var viewportWidthAsStyle;
-                if (viewportWidth === 0)
-                    viewportWidthAsStyle = "100%";
-                else
-                    viewportWidthAsStyle = viewportWidth + "px";
-                fakeViewport.style.width = viewportWidthAsStyle;
+                    // Don't center within parent
+                    viewport.style.removeProperty("margin");
+                }
+                else // fixed size
+                {
+                    // Set fixed size
+                    var viewportSize = this._viewportSizes[index];
+                    viewport.style.width = viewportSize.width + "px";
+                    viewport.style.height = viewportSize.height + "px";
 
-                var viewportHeightAsStyle;
-                if (viewportHeight === 0)
-                    viewportHeightAsStyle = "100%";
-                else
-                    viewportHeightAsStyle = viewportHeight + "px";
-                fakeViewport.style.height = viewportHeightAsStyle;
+                    // Border
+                    viewport.style.removeProperty("border-top");
+                    viewport.style.border = "1px solid black";
+
+                    // Center within parent
+                    viewport.style.margin = "auto";
+                }
             }
 
         });
+
     </script>
 </dom-module>
