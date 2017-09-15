@@ -39,70 +39,69 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
         <style>
             :host {
                 display:block;
+                @apply --layout-horizontal;
             }
         </style>
 
+        <!-- Config panel -->
         <div
-                class="layout horizontal"
-                style="width:100%; height:100%; ">
+                class="layout vertical"
+                style="border-right:1px solid #DDD; ">
 
-            <!-- Config panel -->
+            <!-- Config slot -->
+            <slot name="config"></slot>
+        </div>
+
+        <!-- Element panel -->
+        <div
+                id="elementPanel"
+                style="width:100%; ">
+
+            <!-- Size header -->
             <div
-                    class="layout vertical center"
-                    style="height:100%; border-right:1px solid #DDD; ">
-
-                <!-- Config slot -->
-                <slot name="config"></slot>
-            </div>
-
-            <!-- Element panel -->
-            <div
-                    id="elementPanel"
-                    style="width:100%; height:100%; ">
+                    class="layout vertical center">
 
                 <!-- Size header -->
                 <div
-                        class="layout vertical center">
+                        id="sizeHeader"
+                        class="layout horizontal center"
+                        style="padding-top:5px; padding-bottom:10px; ">
 
-                    <!-- Size header -->
-                    <div
-                            id="sizeHeader"
-                            class="layout horizontal center"
-                            style="padding-top:5px; padding-bottom:10px; ">
+                    <!-- Menu -->
+                    <paper-dropdown-menu
+                            label="Viewport Size"
+                            style="width:130px; ">
+                        <paper-listbox
+                                class="dropdown-content"
+                                slot="dropdown-content"
+                                selected="{{_selectedViewportSizeIndex}}">
+                            <template
+                                    is="dom-repeat"
+                                    items="[[_viewportSizes]]"
+                                    as="viewportSize">
+                                <paper-item>[[viewportSize.name]]</paper-item>
+                            </template>
+                        </paper-listbox>
+                    </paper-dropdown-menu>
 
-                        <!-- Menu -->
-                        <paper-dropdown-menu label="Viewport Size" style="width:130px; ">
-                            <paper-listbox
-                                    class="dropdown-content"
-                                    slot="dropdown-content"
-                                    selected="{{_selectedViewportSizeIndex}}">
-                                <template is="dom-repeat" items="[[_viewportSizes]]" as="viewportSize">
-                                    <paper-item>[[viewportSize.name]]</paper-item>
-                                </template>
-                            </paper-listbox>
-                        </paper-dropdown-menu>
+                    <div id="spacer" style="width:30px; "></div>
 
-                        <div id="spacer" style="width:30px; "></div>
-
-                        <!-- Size display -->
-                        <div>
-                            ([[_viewportWidth]] x [[_viewportHeight]])
-                        </div>
-
+                    <!-- Size display -->
+                    <div>
+                        ([[_viewportWidth]] x [[_viewportHeight]])
                     </div>
-                </div>
 
-                <!-- Fake viewport -->
-                <div
-                        id="fakeViewport"
-                        class="layout vertical center"
-                        style="overflow:auto; ">
-
-                    <!-- Element slot -->
-                    <slot name="element"></slot>
                 </div>
             </div>
 
+            <!-- Fake viewport -->
+            <div
+                    id="fakeViewport"
+                    class="layout vertical center scroll">
+
+                <!-- Element slot -->
+                <slot name="element"></slot>
+            </div>
         </div>
 
     </template>
@@ -113,6 +112,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
             is: 'ft-element-demo',
 
             behaviors: [
+                Polymer.IronResizableBehavior,
                 FileThis.ScrollingBehavior
             ],
 
@@ -250,7 +250,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                     viewport.style.removeProperty("border");
                     viewport.style.borderTop = "1px solid black";
 
-                    // Don't center within parent
+                    // Margin
                     viewport.style.removeProperty("margin");
                 }
                 else // fixed size
@@ -264,9 +264,13 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                     viewport.style.removeProperty("border-top");
                     viewport.style.border = "1px solid black";
 
-                    // Center within parent
+                    // Margin (center within parent)
                     viewport.style.margin = "auto";
+                    viewport.style.marginBottom = "16px";
                 }
+
+                // Tell the iron-list to reconstraint itself
+                this.notifyResize();
             }
 
         });
