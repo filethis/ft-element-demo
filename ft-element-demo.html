@@ -46,7 +46,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
         <!-- Config panel -->
         <div
                 class="layout vertical"
-                style="border-right:1px solid #DDD; ">
+                style="border-right:1px solid #DDD; height:100%; ">
 
             <!-- Config slot -->
             <slot name="config"></slot>
@@ -55,11 +55,13 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
         <!-- Element panel -->
         <div
                 id="elementPanel"
+                class="layout vertical"
                 style="width:100%; ">
 
             <!-- Size header -->
             <div
-                    class="layout vertical center">
+                    class="layout vertical center"
+                    style="border-bottom:1px solid #DDD;">
 
                 <!-- Size header -->
                 <div
@@ -94,13 +96,17 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                 </div>
             </div>
 
-            <!-- Fake viewport -->
+            <!-- Main -->
             <div
-                    id="fakeViewport"
-                    class="layout vertical center scroll">
+                    id="main"
+                    class="flex scroll">
 
-                <!-- Element slot -->
-                <slot name="element"></slot>
+                <!-- Fake viewport -->
+                <div id="fakeViewport">
+
+                    <!-- Element slot -->
+                    <slot name="element"></slot>
+                </div>
             </div>
         </div>
 
@@ -200,7 +206,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
 
             ready: function()
             {
-                this._manageScroller(this.$.fakeViewport)
+//                this._manageScroller(this.$.main)
             },
 
             _calculateScrollerWidth: function(scroller)
@@ -248,7 +254,6 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
 
                     // Border
                     viewport.style.removeProperty("border");
-                    viewport.style.borderTop = "1px solid black";
 
                     // Margin
                     viewport.style.removeProperty("margin");
@@ -261,15 +266,15 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                     viewport.style.height = viewportSize.height + "px";
 
                     // Border
-                    viewport.style.removeProperty("border-top");
                     viewport.style.border = "1px solid black";
 
                     // Margin (center within parent)
                     viewport.style.margin = "auto";
+                    viewport.style.marginTop = "16px";
                     viewport.style.marginBottom = "16px";
                 }
 
-                // Tell the iron-list to reconstraint itself
+                // Tell the iron-list to reconstrain itself
                 this.notifyResize();
             }
 
