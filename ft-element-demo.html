@@ -15,7 +15,6 @@ limitations under the License.
 -->
 
 
-<link rel="import" href="../ft-scrolling-behavior/ft-scrolling-behavior.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../paper-item/paper-item.html">
@@ -118,8 +117,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
             is: 'ft-element-demo',
 
             behaviors: [
-                Polymer.IronResizableBehavior,
-                FileThis.ScrollingBehavior
+                Polymer.IronResizableBehavior
             ],
 
             listeners:
@@ -202,28 +200,6 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                         value: 0,
                         observer: "_onSelectedViewportSizeIndexChanged"
                     }
-            },
-
-            ready: function()
-            {
-//                this._manageScroller(this.$.main)
-            },
-
-            _calculateScrollerWidth: function(scroller)
-            {
-                // Don't adjust width
-                return -1;
-            },
-
-            _calculateScrollerHeight: function(scroller)
-            {
-                if (!this._isFullSize)
-                    return -1; // Don't adjust height
-
-                // Adjust scroller height for height of size header above it
-                var sizeHeader = this.$.sizeHeader;
-                var sizeHeaderHeight = sizeHeader.offsetTop + sizeHeader.offsetHeight + 1;
-                return this.clientHeight - sizeHeaderHeight;
             },
 
             _onIronResizeThis: function(event)
