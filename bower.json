@@ -4,6 +4,7 @@
     "main": "ft-element-demo.html",
     "dependencies": {
         "ft-scrolling-behavior": "filethis/ft-scrolling-behavior#^0.0.8",
+        "ft-styler": "filethis/ft-styler#^0.0.1",
         "paper-checkbox": "PolymerElements/paper-checkbox#1 - 2",
         "paper-dropdown-menu": "PolymerElements/paper-dropdown-menu#1 - 2",
         "paper-item": "PolymerElements/paper-item#1 - 2",

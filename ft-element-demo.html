@@ -21,6 +21,7 @@ limitations under the License.
 <link rel="import" href="../paper-item/paper-item.html">
 <link rel="import" href="../paper-listbox/paper-listbox.html">
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../ft-styler/ft-styler.html">
 
 <!--
 `<ft-element-demo>`
@@ -39,6 +40,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
             :host {
                 display:block;
                 @apply --layout-horizontal;
+                @apply --ft-element-demo;
             }
         </style>
 
@@ -49,6 +51,15 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
 
             <!-- Config slot -->
             <slot name="config"></slot>
+        </div>
+
+        <!-- Styler panel -->
+        <div
+                class="layout vertical"
+                style="border-right:1px solid #DDD; height:100%; ">
+
+            <ft-styler class="flex">
+            </ft-styler>
         </div>
 
         <!-- Element panel -->
