@@ -16,12 +16,16 @@ limitations under the License.
 
 
 <link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../iron-pages/iron-pages.html">
+<link rel="import" href="../juicy-ace-editor/juicy-ace-editor.html">
+<link rel="import" href="../ft-confirmation-dialog/ft-confirmation-dialog.html">
+<link rel="import" href="../ft-labeled-icon-button/ft-labeled-icon-button.html">
+<link rel="import" href="../ft-styler/ft-styler.html">
 <link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../paper-item/paper-item.html">
 <link rel="import" href="../paper-item/paper-item.html">
 <link rel="import" href="../paper-listbox/paper-listbox.html">
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../ft-styler/ft-styler.html">
 
 <!--
 `<ft-element-demo>`
@@ -49,35 +53,78 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                 class="layout vertical"
                 style="border-right:1px solid #DDD; height:100%; ">
 
+            <!-- Main header -->
+            <div
+                    class="layout horizontal center"
+                    style="height:80px; border-bottom:1px solid #DDD; padding-left:16px; padding-right:16px; ">
+
+                <!-- Element name -->
+                <iron-label
+                        style="font-family:Arial; font-size:16pt; white-space:nowrap; ">
+                    <[[name]]>
+                </iron-label>
+
+                <!-- Spacer -->
+                <div class="flex"></div>
+
+                <!-- GitHub repository button -->
+                <ft-labeled-icon-button
+                        style="padding-left:8px; "
+                        icon="cloud-queue"
+                        label="Repo"
+                        on-tap="_onRepoButtonTapped">
+                </ft-labeled-icon-button>
+
+                <!-- Documentation button -->
+                <ft-labeled-icon-button
+                        id="documentationButton"
+                        icon="info-outline"
+                        label="Docs"
+                        on-tap="_onDocumentationButtonClicked">
+                </ft-labeled-icon-button>
+            </div>
+
             <!-- Config slot -->
-            <slot name="config"></slot>
-        </div>
+            <slot
+                    id="configSlot"
+                    name="config">
+            </slot>
 
-        <!-- Styler panel -->
-        <div
-                class="layout vertical"
-                style="border-right:1px solid #DDD; height:100%; ">
-
-            <ft-styler class="flex">
+            <!-- Styler -->
+            <ft-styler
+                    id="styler"
+                    class="flex"
+                    name="[[name]]"
+                    style="border-top:1px solid #DDD; ">
             </ft-styler>
+
         </div>
 
-        <!-- Element panel -->
+        <!-- Instance panel -->
         <div
-                id="elementPanel"
+                id="instancePanel"
                 class="layout vertical"
                 style="width:100%; ">
 
-            <!-- Size header -->
+            <!-- Instance header -->
             <div
-                    class="layout vertical center"
-                    style="border-bottom:1px solid #DDD;">
+                    class="layout vertical"
+                    style="height:80px; border-bottom:1px solid #DDD; ">
 
                 <!-- Size header -->
                 <div
                         id="sizeHeader"
                         class="layout horizontal center"
-                        style="padding-top:5px; padding-bottom:10px; ">
+                        style="padding-left:16px; padding-top:5px; padding-right:16px; padding-bottom:5px; ">
+
+                    <!-- Title -->
+                    <iron-label
+                            style="font-family:Arial; font-size:16pt; white-space:nowrap; ">
+                        Instance
+                    </iron-label>
+
+                    <!-- Spacer -->
+                    <div class="flex" style="min-width:30px; "></div>
 
                     <!-- Menu -->
                     <paper-dropdown-menu
@@ -96,29 +143,76 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                         </paper-listbox>
                     </paper-dropdown-menu>
 
-                    <div id="spacer" style="width:30px; "></div>
+                    <div style="width:10px; min-width:20px; "></div>
 
                     <!-- Size display -->
-                    <div>
+                    <div id="sizeDisplay">
                         ([[_viewportWidth]] x [[_viewportHeight]])
                     </div>
 
+                    <!-- Spacer -->
+                    <div class="flex" style="min-width:30px; "></div>
+
+                    <!-- View code button -->
+                    <ft-labeled-icon-button
+                            id="viewCodeButton"
+                            icon="code"
+                            label="Code"
+                            on-tap="_onViewCodeButtonClicked">
+                    </ft-labeled-icon-button>
+
+                    <!-- View rendered button -->
+                    <ft-labeled-icon-button
+                            id="viewRenderedButton"
+                            icon="dashboard"
+                            label="Render"
+                            on-tap="_onViewRenderedButtonClicked">
+                    </ft-labeled-icon-button>
+
                 </div>
             </div>
+            
+            <!-- Rendered or code -->
+            <iron-pages
+                    id="renderedOrCode"
+                    class="flex layout vertical"
+                    attr-for-selected="name"
+                    selected="[[_selectedMode]]">
 
-            <!-- Main -->
-            <div
-                    id="main"
-                    class="flex scroll">
-
-                <!-- Fake viewport -->
-                <div id="fakeViewport">
-
-                    <!-- Element slot -->
-                    <slot name="element"></slot>
+                <!-- Rendered -->
+                <div
+                        id="rendered"
+                        name="rendered"
+                        class="flex scroll">
+    
+                    <!-- Fake viewport -->
+                    <div id="fakeViewport">
+    
+                        <!-- Element slot -->
+                        <slot
+                                id="elementSlot"
+                                name="element">
+                        </slot>
+                    </div>
                 </div>
-            </div>
+
+                <!-- Code -->
+                <juicy-ace-editor
+                        id="code"
+                        name="code"
+                        class="flex scroll"
+                        readonly
+                        theme="ace/theme/chrome"
+                        mode="ace/mode/html"
+                        fontsize="14px"
+                        softtabs
+                        tabsize="4"></juicy-ace-editor>
+
+            </iron-pages>
         </div>
+
+        <!-- Confirmation dialog -->
+        <ft-confirmation-dialog id="confirmationDialog"></ft-confirmation-dialog>
 
     </template>
 
@@ -137,6 +231,23 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
             },
 
             properties: {
+
+                name: {
+                    type: String,
+                    notify: true,
+                    value: "ft-thing"
+                },
+
+                css: {
+                    type: String,
+                    notify: true
+                },
+
+                _selectedMode: {
+                    type: String,
+                    value: "rendered",
+                    observer: "_selectedModeChanged"
+                },
 
                 _viewportWidth:
                     {
@@ -213,11 +324,46 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                     }
             },
 
+            ready: function()
+            {
+                var elementSlot = this.$.elementSlot;
+                var elementSlotAssignedNodes = elementSlot.assignedNodes();
+                var target = elementSlotAssignedNodes[0];
+                this.$.styler.target = target;
+            },
+
+//            ready: function()
+//            {
+//                var element = this._findElement();
+//                this.$.styler.target = element;
+//            },
+
+            _findElement: function()
+            {
+                // TODO: There must be a better way to do this...
+                var fakeViewport = this.$.fakeViewport;
+                var children = Polymer.dom(fakeViewport).getEffectiveChildNodes();
+                var count = children.length;
+                for (var index = 0;
+                     index < count;
+                     index++)
+                {
+                    var child = children[index];
+                    if (child.id === "panel")
+                        return child;
+                }
+                return null;
+            },
+
             _onIronResizeThis: function(event)
             {
                 var viewport = this.$.fakeViewport;
-                this._viewportWidth = viewport.offsetWidth;
-                this._viewportHeight = viewport.offsetHeight;
+                var width = viewport.offsetWidth;
+                var height = viewport.offsetHeight;
+                if (!!width)
+                   this._viewportWidth = width;
+                if (!!height)
+                   this._viewportHeight = height;
             },
 
             _onSelectedViewportSizeIndexChanged: function(to, from)
@@ -232,6 +378,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                 this._isFullSize = isFullSize;
 
                 var viewport = this.$.fakeViewport;
+                var rendered = this.$.rendered;
 
                 if (isFullSize)
                 {
@@ -241,6 +388,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
 
                     // Border
                     viewport.style.removeProperty("border");
+                    rendered.style.border = "1px solid black";
 
                     // Margin
                     viewport.style.removeProperty("margin");
@@ -254,6 +402,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
 
                     // Border
                     viewport.style.border = "1px solid black";
+                    rendered.style.removeProperty("border");
 
                     // Margin (center within parent)
                     viewport.style.margin = "auto";
@@ -263,6 +412,47 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
 
                 // Tell the iron-list to reconstrain itself
                 this.notifyResize();
+            },
+
+            _selectedModeChanged: function(to, from)
+            {
+                var display;
+                if (to === "code")
+                    display = "none";
+                else // to == "rendered"
+                    display = "block";
+                this.$.sizeDisplay.style.display = display;
+            },
+
+            _onViewCodeButtonClicked: function(event, detail)
+            {
+                this._selectedMode = "code";
+            },
+
+            _onViewRenderedButtonClicked: function(event, detail)
+            {
+                this._selectedMode = "rendered";
+            },
+
+            _onDocumentationButtonClicked: function(event, detail)
+            {
+                var url = "https://filethis.github.io/" + this.name;
+                this._openUrl(url);
+            },
+
+            _onRepoButtonTapped: function(event)
+            {
+                var url = "https://github.com/filethis/" + this.name;
+                this._openUrl(url);
+            },
+
+            _openUrl: function(url)
+            {
+                var win = window.open(url, '_blank');
+                if (win)
+                    win.focus();
+                else
+                    this.$.confirmationDialog.alert("Please allow popups for this site");
             }
 
         });
