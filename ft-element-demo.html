@@ -109,13 +109,13 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
             <!-- Instance header -->
             <div
                     class="layout vertical"
-                    style="height:80px; border-bottom:1px solid #DDD; ">
+                    style="border-bottom:1px solid #DDD; ">
 
                 <!-- Size header -->
                 <div
                         id="sizeHeader"
                         class="layout horizontal center"
-                        style="padding-left:16px; padding-top:5px; padding-right:16px; padding-bottom:5px; ">
+                        style="height:80px; padding-left:16px; padding-right:16px; ">
 
                     <!-- Title -->
                     <iron-label
@@ -128,6 +128,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
 
                     <!-- Menu -->
                     <paper-dropdown-menu
+                            id="viewportSizeMenu"
                             label="Viewport Size"
                             style="width:130px; ">
                         <paper-listbox
@@ -342,9 +343,6 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
 
             ready: function()
             {
-//                var instance = this._getInstance();
-//                this._instanceProvidesCode = (typeof instance.getCode === "function");
-
                 //                var instanceSlot = this.$.instanceSlot;
 //                var elementSlotAssignedNodes = instanceSlot.assignedNodes();
 //                var target = elementSlotAssignedNodes[0];
@@ -382,7 +380,8 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                 // Deselect code text
                 var editor = this.$.editor;
                 var editorInternal = editor.editor;
-                editorInternal.selection.selectFileStart();
+                if (editorInternal !== undefined)
+                    editorInternal.selection.selectFileStart();
             },
 
             _getInstance: function()
@@ -459,6 +458,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                     display = "none";
                 else // to == "rendered"
                     display = "block";
+                this.$.viewportSizeMenu.style.display = display;
                 this.$.sizeDisplay.style.display = display;
             },
 
