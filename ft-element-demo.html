@@ -34,6 +34,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
 
 @demo
 -->
+
 <dom-module id="ft-element-demo">
 
     <template>
@@ -91,12 +92,11 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
             </slot>
 
             <!-- Styler -->
-            <ft-styler
-                    id="styler"
-                    class="flex"
-                    name="[[name]]"
-                    style="border-top:1px solid #DDD; ">
-            </ft-styler>
+            <!--<ft-styler-->
+                    <!--id="styler"-->
+                    <!--name="[[name]]"-->
+                    <!--style="border-top:1px solid #DDD; ">-->
+            <!--</ft-styler>-->
 
         </div>
 
@@ -158,6 +158,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                             id="viewCodeButton"
                             icon="code"
                             label="Code"
+                            hidden="[[!_instanceProvidesCode]]"
                             on-tap="_onViewCodeButtonClicked">
                     </ft-labeled-icon-button>
 
@@ -166,6 +167,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                             id="viewRenderedButton"
                             icon="dashboard"
                             label="Render"
+                            hidden="[[!_instanceProvidesCode]]"
                             on-tap="_onViewRenderedButtonClicked">
                     </ft-labeled-icon-button>
 
@@ -184,21 +186,21 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                         id="rendered"
                         name="rendered"
                         class="flex scroll">
-    
+
                     <!-- Fake viewport -->
                     <div id="fakeViewport">
     
-                        <!-- Element slot -->
+                        <!-- Instance slot -->
                         <slot
-                                id="elementSlot"
-                                name="element">
+                                id="instanceSlot"
+                                name="instance">
                         </slot>
                     </div>
                 </div>
 
                 <!-- Code -->
                 <juicy-ace-editor
-                        id="code"
+                        id="editor"
                         name="code"
                         class="flex scroll"
                         readonly
@@ -206,6 +208,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                         mode="ace/mode/html"
                         fontsize="14px"
                         softtabs
+                        value="[[code]]"
                         tabsize="4"></juicy-ace-editor>
 
             </iron-pages>
@@ -243,6 +246,13 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                     notify: true
                 },
 
+                code:
+                {
+                    type: String,
+                    value: "",
+                    observer: "_onCodeChanged"
+                },
+
                 _selectedMode: {
                     type: String,
                     value: "rendered",
@@ -260,6 +270,12 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                     },
 
                 _isFullSize:
+                    {
+                        type: Boolean,
+                        value: true
+                    },
+
+                _instanceProvidesCode:
                     {
                         type: Boolean,
                         value: true
@@ -326,19 +342,22 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
 
             ready: function()
             {
-                var elementSlot = this.$.elementSlot;
-                var elementSlotAssignedNodes = elementSlot.assignedNodes();
-                var target = elementSlotAssignedNodes[0];
-                this.$.styler.target = target;
+//                var instance = this._getInstance();
+//                this._instanceProvidesCode = (typeof instance.getCode === "function");
+
+                //                var instanceSlot = this.$.instanceSlot;
+//                var elementSlotAssignedNodes = instanceSlot.assignedNodes();
+//                var target = elementSlotAssignedNodes[0];
+//                this.$.styler.target = target;
             },
 
 //            ready: function()
 //            {
-//                var element = this._findElement();
-//                this.$.styler.target = element;
+//                var instance = this._findElementWithId("panel");
+//                this.$.styler.target = instance;
 //            },
 
-            _findElement: function()
+            _findElementWithId: function(id)
             {
                 // TODO: There must be a better way to do this...
                 var fakeViewport = this.$.fakeViewport;
@@ -349,10 +368,29 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                      index++)
                 {
                     var child = children[index];
-                    if (child.id === "panel")
+                    if (child.id === id)
                         return child;
                 }
                 return null;
+            },
+
+            _onCodeChanged:function()
+            {
+                var haveCode = !!this.code;
+                this._instanceProvidesCode = haveCode;
+
+                // Deselect code text
+                var editor = this.$.editor;
+                var editorInternal = editor.editor;
+                editorInternal.selection.selectFileStart();
+            },
+
+            _getInstance: function()
+            {
+                var fakeViewport = this.$.fakeViewport;
+                var children = Polymer.dom(fakeViewport).getEffectiveChildNodes();
+                var instance = children[3];  // TODO: Find a better way...
+                return instance;
             },
 
             _onIronResizeThis: function(event)
