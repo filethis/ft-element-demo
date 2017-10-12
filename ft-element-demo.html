@@ -52,6 +52,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
         <!-- Config panel -->
         <div
                 class="layout vertical"
+                hidden$="[[!showConfig]]"
                 style="border-right:1px solid #DDD; height:100%; ">
 
             <!-- Main header -->
@@ -254,6 +255,19 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                     observer: "_onCodeChanged"
                 },
 
+                /**
+                 * Show the configuration sidebar on the left.
+                 *
+                 * Note that you can provide the strings "true" and "false" as attribute values.
+                 *
+                 * @type {boolean}
+                 */
+                showConfig:
+                {
+                    type: Object,
+                    value: true
+                },
+
                 _selectedMode: {
                     type: String,
                     value: "rendered",
@@ -279,7 +293,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                 _instanceProvidesCode:
                     {
                         type: Boolean,
-                        value: true
+                        value: false
                     },
 
                 // Viewport sizes ----------------------------
@@ -375,7 +389,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
             _onCodeChanged:function()
             {
                 var haveCode = !!this.code;
-                this._instanceProvidesCode = haveCode;
+//                this._instanceProvidesCode = haveCode;
 
                 // Deselect code text
                 var editor = this.$.editor;
