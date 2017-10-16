@@ -26,6 +26,7 @@ limitations under the License.
 <link rel="import" href="../paper-item/paper-item.html">
 <link rel="import" href="../paper-listbox/paper-listbox.html">
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="ft-element-demo-header.html">
 
 <!--
 `<ft-element-demo>`
@@ -44,177 +45,172 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
         <style>
             :host {
                 display:block;
-                @apply --layout-horizontal;
+                @apply --layout-vertical;
                 @apply --ft-element-demo;
             }
         </style>
 
-        <!-- Config panel -->
+        <ft-element-demo-header
+                name="[[name]]"
+                hidden="[[!showHeader]]">
+        </ft-element-demo-header>
+
         <div
-                class="layout vertical"
-                hidden$="[[!showConfig]]"
-                style="border-right:1px solid #DDD; height:100%; ">
+                class="flex layout horizontal">
 
-            <!-- Main header -->
-            <div
-                    class="layout horizontal center"
-                    style="height:80px; border-bottom:1px solid #DDD; padding-left:16px; padding-right:16px; ">
-
-                <!-- Element name -->
-                <iron-label
-                        style="font-family:Arial; font-size:16pt; white-space:nowrap; ">
-                    <[[name]]>
-                </iron-label>
-
-                <!-- Spacer -->
-                <div class="flex"></div>
-
-                <!-- GitHub repository button -->
-                <ft-labeled-icon-button
-                        style="padding-left:8px; "
-                        icon="cloud-queue"
-                        label="Repo"
-                        on-tap="_onRepoButtonTapped">
-                </ft-labeled-icon-button>
-
-                <!-- Documentation button -->
-                <ft-labeled-icon-button
-                        id="documentationButton"
-                        icon="info-outline"
-                        label="Docs"
-                        on-tap="_onDocumentationButtonClicked">
-                </ft-labeled-icon-button>
-            </div>
-
-            <!-- Config slot -->
-            <slot
-                    id="configSlot"
-                    name="config">
-            </slot>
-
-            <!-- Styler -->
-            <!--<ft-styler-->
-                    <!--id="styler"-->
-                    <!--name="[[name]]"-->
-                    <!--style="border-top:1px solid #DDD; ">-->
-            <!--</ft-styler>-->
-
-        </div>
-
-        <!-- Instance panel -->
-        <div
-                id="instancePanel"
-                class="layout vertical"
-                style="width:100%; ">
-
-            <!-- Instance header -->
+            <!-- Config panel -->
             <div
                     class="layout vertical"
-                    style="border-bottom:1px solid #DDD; ">
+                    hidden$="[[!showConfig]]"
+                    style="border-right:1px solid #DDD; ">
 
-                <!-- Size header -->
+                <!-- Main header -->
                 <div
-                        id="sizeHeader"
                         class="layout horizontal center"
-                        style="height:80px; padding-left:16px; padding-right:16px; ">
+                        style="height:60px; border-bottom:1px solid #DDD; padding-left:16px; padding-right:16px; ">
 
-                    <!-- Title -->
+                    <!-- Element name -->
                     <iron-label
                             style="font-family:Arial; font-size:16pt; white-space:nowrap; ">
-                        Instance
+                        Configuration
                     </iron-label>
 
-                    <!-- Spacer -->
-                    <div class="flex" style="min-width:30px; "></div>
-
-                    <!-- Menu -->
-                    <paper-dropdown-menu
-                            id="viewportSizeMenu"
-                            label="Viewport Size"
-                            style="width:130px; ">
-                        <paper-listbox
-                                class="dropdown-content"
-                                slot="dropdown-content"
-                                selected="{{_selectedViewportSizeIndex}}">
-                            <template
-                                    is="dom-repeat"
-                                    items="[[_viewportSizes]]"
-                                    as="viewportSize">
-                                <paper-item>[[viewportSize.name]]</paper-item>
-                            </template>
-                        </paper-listbox>
-                    </paper-dropdown-menu>
-
-                    <div style="width:10px; min-width:20px; "></div>
-
-                    <!-- Size display -->
-                    <div id="sizeDisplay">
-                        ([[_viewportWidth]] x [[_viewportHeight]])
-                    </div>
-
-                    <!-- Spacer -->
-                    <div class="flex" style="min-width:30px; "></div>
-
-                    <!-- View code button -->
-                    <ft-labeled-icon-button
-                            id="viewCodeButton"
-                            icon="code"
-                            label="Code"
-                            hidden="[[!_instanceProvidesCode]]"
-                            on-tap="_onViewCodeButtonClicked">
-                    </ft-labeled-icon-button>
-
-                    <!-- View rendered button -->
-                    <ft-labeled-icon-button
-                            id="viewRenderedButton"
-                            icon="dashboard"
-                            label="Render"
-                            hidden="[[!_instanceProvidesCode]]"
-                            on-tap="_onViewRenderedButtonClicked">
-                    </ft-labeled-icon-button>
-
                 </div>
-            </div>
-            
-            <!-- Rendered or code -->
-            <iron-pages
-                    id="renderedOrCode"
-                    class="flex layout vertical"
-                    attr-for-selected="name"
-                    selected="[[_selectedMode]]">
 
-                <!-- Rendered -->
+                <!-- Config slot -->
                 <div
-                        id="rendered"
-                        name="rendered"
-                        class="flex scroll">
+                        class="flex">
+                    <slot
+                            id="configSlot"
+                            name="config">
+                    </slot>
+                </div>
 
-                    <!-- Fake viewport -->
-                    <div id="fakeViewport">
-    
-                        <!-- Instance slot -->
-                        <slot
-                                id="instanceSlot"
-                                name="instance">
-                        </slot>
+                <!-- Styler -->
+                <!--<ft-styler-->
+                        <!--id="styler"-->
+                        <!--name="[[name]]"-->
+                        <!--style="border-top:1px solid #DDD; ">-->
+                <!--</ft-styler>-->
+
+            </div>
+
+            <!-- Instance panel -->
+            <div
+                    id="instancePanel"
+                    class="flex layout vertical">
+
+                <!-- Instance header -->
+                <div
+                        class="layout vertical"
+                        style="border-bottom:1px solid #DDD; ">
+
+                    <!-- Size header -->
+                    <div
+                            id="sizeHeader"
+                            class="layout horizontal center"
+                            style="height:60px; padding-left:16px; padding-right:16px; ">
+
+                        <!-- Title -->
+                        <iron-label
+                                style="font-family:Arial; font-size:16pt; white-space:nowrap; ">
+                            Instance
+                        </iron-label>
+
+                        <!-- Spacer -->
+                        <div class="flex" style="min-width:30px; "></div>
+
+                        <!-- Menu -->
+                        <paper-dropdown-menu
+                                id="viewportSizeMenu"
+                                label="Viewport Size"
+                                style="width:130px; ">
+                            <paper-listbox
+                                    class="dropdown-content"
+                                    slot="dropdown-content"
+                                    selected="{{_selectedViewportSizeIndex}}">
+                                <template
+                                        is="dom-repeat"
+                                        items="[[_viewportSizes]]"
+                                        as="viewportSize">
+                                    <paper-item>[[viewportSize.name]]</paper-item>
+                                </template>
+                            </paper-listbox>
+                        </paper-dropdown-menu>
+
+                        <div style="width:10px; min-width:20px; "></div>
+
+                        <!-- Size display -->
+                        <div id="sizeDisplay">
+                            ([[_viewportWidth]] x [[_viewportHeight]])
+                        </div>
+
+                        <!-- Spacer -->
+                        <div class="flex" style="min-width:30px; "></div>
+
+                        <!-- View code button -->
+                        <ft-labeled-icon-button
+                                id="viewCodeButton"
+                                icon="code"
+                                label="Code"
+                                hidden="[[!_instanceProvidesCode]]"
+                                on-tap="_onViewCodeButtonClicked">
+                        </ft-labeled-icon-button>
+
+                        <!-- View rendered button -->
+                        <ft-labeled-icon-button
+                                id="viewRenderedButton"
+                                icon="dashboard"
+                                label="Render"
+                                hidden="[[!_instanceProvidesCode]]"
+                                on-tap="_onViewRenderedButtonClicked">
+                        </ft-labeled-icon-button>
+
                     </div>
                 </div>
 
-                <!-- Code -->
-                <juicy-ace-editor
-                        id="editor"
-                        name="code"
-                        class="flex scroll"
-                        readonly
-                        theme="ace/theme/chrome"
-                        mode="ace/mode/html"
-                        fontsize="14px"
-                        softtabs
-                        value="[[code]]"
-                        tabsize="4"></juicy-ace-editor>
+                <!-- Rendered or code -->
+                <iron-pages
+                        id="renderedOrCode"
+                        class="flex layout vertical"
+                        attr-for-selected="name"
+                        selected="[[_selectedMode]]">
 
-            </iron-pages>
+                    <!-- Rendered -->
+                    <div
+                            id="rendered"
+                            name="rendered"
+                            class="flex scroll">
+
+                        <!-- Fake viewport -->
+                        <div id="fakeViewport">
+
+                            <!-- Instance slot -->
+                            <slot
+                                    id="instanceSlot"
+                                    name="instance">
+                            </slot>
+                        </div>
+                    </div>
+
+                    <!-- Code -->
+                    <juicy-ace-editor
+                            id="editor"
+                            name="code"
+                            class="flex scroll"
+                            readonly
+                            theme="ace/theme/chrome"
+                            mode="ace/mode/html"
+                            fontsize="14px"
+                            softtabs
+                            value="[[code]]"
+                            tabsize="4"></juicy-ace-editor>
+
+                </iron-pages>
+            </div>
+
         </div>
+
 
         <!-- Confirmation dialog -->
         <ft-confirmation-dialog id="confirmationDialog"></ft-confirmation-dialog>
@@ -241,6 +237,12 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                     type: String,
                     notify: true,
                     value: "ft-thing"
+                },
+
+                showHeader: {
+                    type: Object,
+                    notify: true,
+                    value: true
                 },
 
                 css: {
@@ -389,7 +391,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
             _onCodeChanged:function()
             {
                 var haveCode = !!this.code;
-//                this._instanceProvidesCode = haveCode;
+                this._instanceProvidesCode = haveCode;
 
                 // Deselect code text
                 var editor = this.$.editor;
@@ -439,6 +441,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
 
                     // Border
                     viewport.style.removeProperty("border");
+                    viewport.style.removeProperty("box-shadow");
                     rendered.style.border = "1px solid black";
 
                     // Margin
@@ -453,6 +456,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
 
                     // Border
                     viewport.style.border = "1px solid black";
+                    viewport.style.boxShadow = "5px 5px 4px #BBB";
                     rendered.style.removeProperty("border");
 
                     // Margin (center within parent)
@@ -484,27 +488,6 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
             _onViewRenderedButtonClicked: function(event, detail)
             {
                 this._selectedMode = "rendered";
-            },
-
-            _onDocumentationButtonClicked: function(event, detail)
-            {
-                var url = "https://filethis.github.io/" + this.name;
-                this._openUrl(url);
-            },
-
-            _onRepoButtonTapped: function(event)
-            {
-                var url = "https://github.com/filethis/" + this.name;
-                this._openUrl(url);
-            },
-
-            _openUrl: function(url)
-            {
-                var win = window.open(url, '_blank');
-                if (win)
-                    win.focus();
-                else
-                    this.$.confirmationDialog.alert("Please allow popups for this site");
             }
 
         });
