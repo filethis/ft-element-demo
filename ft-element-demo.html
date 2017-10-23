@@ -18,6 +18,8 @@ limitations under the License.
 <link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../iron-pages/iron-pages.html">
 <link rel="import" href="../juicy-ace-editor/juicy-ace-editor.html">
+<link rel="import" href="../bower_components/ft-accordion-item/ft-accordion-item.html">
+<link rel="import" href="../ft-accordion-item/ft-accordion-item.html">
 <link rel="import" href="../ft-confirmation-dialog/ft-confirmation-dialog.html">
 <link rel="import" href="../ft-labeled-icon-button/ft-labeled-icon-button.html">
 <link rel="import" href="../ft-styler/ft-styler.html">
@@ -45,55 +47,33 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
         <style>
             :host {
                 display:block;
+                overflow:hidden;
                 @apply --layout-vertical;
                 @apply --ft-element-demo;
             }
         </style>
 
         <ft-element-demo-header
-                name="[[name]]"
-                hidden="[[!showHeader]]">
+            name="[[name]]"
+            hidden="[[!showHeader]]"
+        >
         </ft-element-demo-header>
 
         <div
-                class="flex layout horizontal">
+            class="flex layout horizontal"
+        >
 
             <!-- Config panel -->
-            <div
-                    class="layout vertical"
-                    hidden$="[[!showConfig]]"
-                    style="border-right:1px solid #DDD; ">
-
-                <!-- Main header -->
-                <div
-                        class="layout horizontal center"
-                        style="height:60px; border-bottom:1px solid #DDD; padding-left:16px; padding-right:16px; ">
-
-                    <!-- Element name -->
-                    <iron-label
-                            style="font-family:Arial; font-size:16pt; white-space:nowrap; ">
-                        Configuration
-                    </iron-label>
-
-                </div>
-
-                <!-- Config slot -->
-                <div
-                        class="flex">
-                    <slot
-                            id="configSlot"
-                            name="config">
+            <ft-accordion-item
+                title="Config"
+                hidden="[[!showConfig]]"
+                style="border-right:1px solid #DDD; "
+            >
+                <div slot="content">
+                    <slot name="config">
                     </slot>
                 </div>
-
-                <!-- Styler -->
-                <!--<ft-styler-->
-                        <!--id="styler"-->
-                        <!--name="[[name]]"-->
-                        <!--style="border-top:1px solid #DDD; ">-->
-                <!--</ft-styler>-->
-
-            </div>
+            </ft-accordion-item>
 
             <!-- Instance panel -->
             <div
@@ -122,9 +102,11 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
 
                         <!-- Menu -->
                         <paper-dropdown-menu
-                                id="viewportSizeMenu"
-                                label="Viewport Size"
-                                style="width:130px; ">
+                            hidden
+                            id="viewportSizeMenu"
+                            label="Viewport Size"
+                            style="width:130px; "
+                        >
                             <paper-listbox
                                     class="dropdown-content"
                                     slot="dropdown-content"
@@ -146,25 +128,25 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                         </div>
 
                         <!-- Spacer -->
-                        <div class="flex" style="min-width:30px; "></div>
+                        <!--<div class="flex" style="min-width:30px; "></div>-->
 
                         <!-- View code button -->
-                        <ft-labeled-icon-button
-                                id="viewCodeButton"
-                                icon="code"
-                                label="Code"
-                                hidden="[[!_instanceProvidesCode]]"
-                                on-tap="_onViewCodeButtonClicked">
-                        </ft-labeled-icon-button>
+                        <!--<ft-labeled-icon-button-->
+                                <!--id="viewCodeButton"-->
+                                <!--icon="code"-->
+                                <!--label="Code"-->
+                                <!--hidden="[[!_instanceProvidesCode]]"-->
+                                <!--on-tap="_onViewCodeButtonClicked">-->
+                        <!--</ft-labeled-icon-button>-->
 
-                        <!-- View rendered button -->
-                        <ft-labeled-icon-button
-                                id="viewRenderedButton"
-                                icon="dashboard"
-                                label="Render"
-                                hidden="[[!_instanceProvidesCode]]"
-                                on-tap="_onViewRenderedButtonClicked">
-                        </ft-labeled-icon-button>
+                        <!--&lt;!&ndash; View rendered button &ndash;&gt;-->
+                        <!--<ft-labeled-icon-button-->
+                                <!--id="viewRenderedButton"-->
+                                <!--icon="dashboard"-->
+                                <!--label="Render"-->
+                                <!--hidden="[[!_instanceProvidesCode]]"-->
+                                <!--on-tap="_onViewRenderedButtonClicked">-->
+                        <!--</ft-labeled-icon-button>-->
 
                     </div>
                 </div>
@@ -267,7 +249,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                 showConfig:
                 {
                     type: Object,
-                    value: true
+                    value: false
                 },
 
                 _selectedMode: {
@@ -391,7 +373,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
             _onCodeChanged:function()
             {
                 var haveCode = !!this.code;
-                this._instanceProvidesCode = haveCode;
+//                this._instanceProvidesCode = haveCode;
 
                 // Deselect code text
                 var editor = this.$.editor;
