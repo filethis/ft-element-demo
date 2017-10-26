@@ -3,6 +3,7 @@
     "description": "An element that can be used for the demo fixture for FileThis elements. Has a slot for the element to be demoed and a side bar for configuration options.",
     "main": "ft-element-demo.html",
     "dependencies": {
+        "ft-clipboard-behavior": "filethis/ft-clipboard-behavior#^0.0.1",
         "ft-accordion-item": "filethis/ft-accordion-item#^0.0.3",
         "ft-confirmation-dialog": "filethis/ft-confirmation-dialog#^0.0.15",
         "ft-labeled-icon-button": "filethis/ft-labeled-icon-button#^0.0.12",
