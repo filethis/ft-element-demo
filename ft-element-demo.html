@@ -108,13 +108,41 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                         <!-- Spacer -->
                         <div class="flex" style="min-width:30px; "></div>
 
-                        <!-- Menu -->
+                        <!-- Deployment menu -->
                         <paper-dropdown-menu
-                            hidden
+                            hidden="[[!_showCode]]"
+                            id="deploymentMenu"
+                            label="Deployment"
+                            style="width:120px; "
+                        >
+                            <paper-listbox
+                                class="dropdown-content"
+                                slot="dropdown-content"
+                                selected="{{_selectedDeploymentIndex}}"
+                            >
+                                <template
+                                    is="dom-repeat"
+                                    items="[[_deployments]]"
+                                    as="deployment"
+                                >
+                                    <paper-item>[[deployment]]</paper-item>
+                                </template>
+                            </paper-listbox>
+                        </paper-dropdown-menu>
+
+                        <!-- Viewport size menu -->
+                        <paper-dropdown-menu
+                            hidden="true"
                             id="viewportSizeMenu"
                             label="Viewport Size"
                             style="width:130px; "
                         >
+                        <!--<paper-dropdown-menu-->
+                            <!--hidden="[[!_showRendered]]"-->
+                            <!--id="viewportSizeMenu"-->
+                            <!--label="Viewport Size"-->
+                            <!--style="width:130px; "-->
+                        <!--&gt;-->
                             <paper-listbox
                                 class="dropdown-content"
                                 slot="dropdown-content"
@@ -133,7 +161,14 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                         <div style="width:10px; min-width:20px; "></div>
 
                         <!-- Size display -->
-                        <div id="sizeDisplay">
+                        <div
+                            hidden="true"
+                            id="sizeDisplay"
+                        >
+                        <!--<div-->
+                            <!--id="sizeDisplay"-->
+                            <!--hidden="[[!_showRendered]]"-->
+                        <!--&gt;-->
                             ([[_viewportWidth]] x [[_viewportHeight]])
                         </div>
 
@@ -196,14 +231,14 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                         class="flex layout vertical"
                         style="padding:20px; "
                     >
-                        <!-- Bootstrap header -->
+                        <!-- Polyfill code header -->
                         <div class="layout horizontal center">
 
                             <!-- Title -->
                             <iron-label
                                 style="font-family:Arial; font-size:14pt; white-space:nowrap; "
                             >
-                                Bootstrap Code
+                                Web Components Polyfill Loader
                             </iron-label>
 
                             <!-- Instructions -->
@@ -211,7 +246,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                                 class="flex"
                                 style="font-family:Arial; font-size:10pt; margin-left:16px; "
                             >
-                                Copy and paste this into the &lt;head&gt; element of your website's index.html page.
+                                Copy and paste this into the &lt;head&gt; element of your website's index.html file.
                             </iron-label>
 
                             <!-- Copy code button -->
@@ -219,27 +254,26 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                                 icon="content-paste"
                                 label="Copy"
                                 style="margin-left:16px; "
-                                on-click="_onCopyBootstrapCodeButtonClicked"
+                                on-click="_onCopyPolyfillCodeButtonClicked"
                             >
                             </ft-labeled-icon-button>
                         </div>
 
-                        <!-- Bootstrap code -->
+                        <!-- Polyfill code -->
                         <juicy-ace-editor
-                            id="bootstrap"
-                            name="bootstrap"
+                            id="polyfillCodeEditor"
                             style="height:100px; border:1px solid #DDD; margin-top:5px; "
                             readonly
                             theme="ace/theme/chrome"
                             mode="ace/mode/html"
                             fontsize="14px"
                             softtabs
-                            value="hello there"
+                            value="[[polyfillCode]]"
                             tabsize="4"
                         >
                         </juicy-ace-editor>
 
-                        <!-- Main header -->
+                        <!-- Page code header -->
                         <div
                             class="layout horizontal center"
                             style="padding-top:10px; "
@@ -249,7 +283,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                             <iron-label
                                 style="font-family:Arial; font-size:14pt; white-space:nowrap; "
                             >
-                                Main Code
+                                Page Code
                             </iron-label>
 
                             <!-- Instructions -->
@@ -257,7 +291,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                                 class="flex"
                                 style="font-family:Arial; font-size:10pt; margin-left:16px; "
                             >
-                                Copy and paste this into a page in your website where you'd like to render the component.
+                                Copy and paste this into the appropriate page of your website.
                             </iron-label>
 
                             <!-- Copy code button -->
@@ -265,14 +299,14 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                                 icon="content-paste"
                                 label="Copy"
                                 style="margin-left:16px; "
-                                on-click="_onCopyMainCodeButtonClicked"
+                                on-click="_onCopyPageCodeButtonClicked"
                             >
                             </ft-labeled-icon-button>
                         </div>
 
-                        <!-- Main code -->
+                        <!-- Page code -->
                         <juicy-ace-editor
-                            id="editor"
+                            id="pageCodeEditor"
                             class="flex scroll"
                             style="border:1px solid #DDD; margin-top:5px; "
                             readonly
@@ -280,7 +314,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                             mode="ace/mode/html"
                             fontsize="14px"
                             softtabs
-                            value="[[code]]"
+                            value="[[pageCode]]"
                             tabsize="4"
                         >
                         </juicy-ace-editor>
@@ -322,7 +356,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
 
             observers:
             [
-                "_onCodeDependencyChanged(accountId, token, _substituteFixtureValues)"
+                "_onCodeDependencyChanged(accountId, token, _substituteFixtureValues, _selectedDeploymentIndex)"
             ],
 
             properties: {
@@ -352,17 +386,18 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                     notify: true
                 },
 
-                code:
+                polyfillCode:
                 {
                     type: String,
                     value: "",
-                    observer: "_onCodeChanged"
+                    observer: "_onPolyfillCodeChanged"
                 },
 
-                bootstrapCode:
+                pageCode:
                 {
                     type: String,
-                    value: "hello-there"
+                    value: "",
+                    observer: "_onPageCodeChanged"
                 },
 
                 /**
@@ -464,18 +499,62 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                         observer: "_onSelectedViewportSizeIndexChanged"
                     },
 
+                // Deployments ----------------------------
+
+                _deployments:
+                    {
+                        type: Array,
+                        notify: true,
+                        value: [ "Drop-In", "Production" ]
+                    },
+
+                _selectedDeploymentIndex:
+                    {
+                        type: Number,
+                        notify: true,
+                        value: 0,
+                        observer: "_onSelectedDeploymentIndexChanged"
+                    },
+
                 _substituteFixtureValues: {
                     type: Boolean,
                     value: false
-                }
+                },
+
+                _showCode: {
+                    type: Boolean
+                },
+
+                _showRendered: {
+                    type: Boolean
+                },
             },
 
             ready: function()
             {
+                // TODO: The "editor" property is undefined when the ready() method is called. That seems wrong. Fix.
+                this.async(function()
+                {
+                    this._configureEditor(this.$.polyfillCodeEditor);
+                    this._configureEditor(this.$.pageCodeEditor);
+                }.bind(this), 100)
+
                 //                var instanceSlot = this.$.instanceSlot;
 //                var elementSlotAssignedNodes = instanceSlot.assignedNodes();
 //                var target = elementSlotAssignedNodes[0];
 //                this.$.styler.target = target;
+            },
+
+            _configureEditor: function(editor)
+            {
+                var editorInternal = editor.editor;
+
+                // Suppress deprecation warning
+                editorInternal.$blockScrolling = Infinity;
+
+                // Disable syntax checking
+                var session = editorInternal.getSession();
+                session.setUseWorker(false);
             },
 
 //            ready: function()
@@ -484,15 +563,21 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
 //                this.$.styler.target = instance;
 //            },
 
-            _onCodeDependencyChanged: function()
+            _onSelectedDeploymentIndexChanged: function()
             {
                 // Load the code template
                 var base;
                 if (this.getUrlParam("devel"))
-                    base = "../bower_components/" + this.name + "/data/";
+                    base = "../bower_components/ft-element-demo/data/";
                 else
-                    base = "https://filethis.github.io/" + this.name + "/components/" + this.name + "/data/";
-                var filename = "code-template.html";
+                    base = "https://filethis.github.io/ft-element-demo/components/ft-element-demo/data/";
+
+                var filename;
+                if (this._selectedDeploymentIndex === 0)  // Drop-In
+                    filename = "code-polyfill-drop-in.html";
+                else // Production
+                    filename = "code-polyfill-production.html";
+
                 var url = base + "/" + filename;
 
                 var options =
@@ -505,16 +590,56 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                     };
 
                 return this.httpGet(url, options)
-                    .then(function(codeTemplate)
+                    .then(function(polyfillCodeTemplate)
                     {
-                        var code = this._makeSubstitutionsInto(codeTemplate);
-                        this.code = code;
-                        var editorInternal = this.$.editor.editor;
-                        editorInternal.selection.selectFileStart();
+                        var polyfillCode = this._makeSubstitutionsInto(polyfillCodeTemplate);
+                        this.polyfillCode = polyfillCode;
+                        var editor = this.$.polyfillCodeEditor.editor;
+                        editor.selection.selectFileStart();
                     }.bind(this))
                     .catch(function(error)
                     {
-                        log.error("Could not load local code template file: " + url);
+                        log.error("Could not load local polyfill code template file: " + url);
+                    }.bind(this));
+            },
+
+            _onCodeDependencyChanged: function()
+            {
+                // Load the code template
+                var base;
+                if (this.getUrlParam("devel"))
+                    base = "../bower_components/" + this.name + "/data/";
+                else
+                    base = "https://filethis.github.io/" + this.name + "/components/" + this.name + "/data/";
+
+                var filename;
+                if (this._selectedDeploymentIndex === 0)  // Drop-In
+                    filename = "code-page-drop-in.html";
+                else // Production
+                    filename = "code-page-production.html";
+
+                var url = base + "/" + filename;
+
+                var options =
+                    {
+                        responseType: "text",
+                        headers:
+                            {
+                                Accept: "text/plain"
+                            }
+                    };
+
+                return this.httpGet(url, options)
+                    .then(function(pageCodeTemplate)
+                    {
+                        var pageCode = this._makeSubstitutionsInto(pageCodeTemplate);
+                        this.pageCode = pageCode;
+                        var editor = this.$.pageCodeEditor.editor;
+                        editor.selection.selectFileStart();
+                    }.bind(this))
+                    .catch(function(error)
+                    {
+                        log.error("Could not load local page code template file: " + url);
                     }.bind(this));
             },
 
@@ -549,26 +674,33 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                 return null;
             },
 
-            _onCopyBootstrapCodeButtonClicked: function(event, detail)
+            _onCopyPolyfillCodeButtonClicked: function(event, detail)
             {
-                this.copyTextToClipboard(this.bootstrapCode);
+                this.copyTextToClipboard(this.polyfillCode);
             },
 
-            _onCopyMainCodeButtonClicked: function(event, detail)
+            _onCopyPageCodeButtonClicked: function(event, detail)
             {
-                this.copyTextToClipboard(this.code);
+                this.copyTextToClipboard(this.pageCode);
             },
 
-            _onCodeChanged:function()
+            _onPolyfillCodeChanged:function()
             {
-                var haveCode = !!this.code;
+                // Deselect text
+                var editor = this.$.polyfillCodeEditor.editor;
+                if (editor !== undefined)
+                    editor.selection.selectFileStart();
+            },
+
+            _onPageCodeChanged:function()
+            {
+                var haveCode = !!this.pageCode;
                 this._instanceProvidesCode = haveCode;
 
-                // Deselect code text
-                var editor = this.$.editor;
-                var editorInternal = editor.editor;
-                if (editorInternal !== undefined)
-                    editorInternal.selection.selectFileStart();
+                // Deselect text
+                var editor = this.$.pageCodeEditor.editor;
+                if (editor !== undefined)
+                    editor.selection.selectFileStart();
             },
 
             _getInstance: function()
@@ -642,13 +774,8 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
 
             _selectedModeChanged: function(to, from)
             {
-                var display;
-                if (to === "code")
-                    display = "none";
-                else // to == "rendered"
-                    display = "block";
-                this.$.viewportSizeMenu.style.display = display;
-                this.$.sizeDisplay.style.display = display;
+                this._showCode = (to === "code");
+                this._showRendered = (to === "rendered");
             },
 
             _onViewCodeButtonClicked: function(event, detail)
