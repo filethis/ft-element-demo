@@ -568,9 +568,9 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                 // Load the code template
                 var base;
                 if (this.getUrlParam("devel"))
-                    base = "../bower_components/ft-element-demo/data/";
+                    base = "../bower_components/ft-element-demo/data";
                 else
-                    base = "https://filethis.github.io/ft-element-demo/components/ft-element-demo/data/";
+                    base = "https://filethis.github.io/ft-connect-wizard/components/ft-element-demo/data";  // TODO: This is brittle!
 
                 var filename;
                 if (this._selectedDeploymentIndex === 0)  // Drop-In
@@ -608,9 +608,9 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                 // Load the code template
                 var base;
                 if (this.getUrlParam("devel"))
-                    base = "../bower_components/" + this.name + "/data/";
+                    base = "../bower_components/" + this.name + "/data";
                 else
-                    base = "https://filethis.github.io/" + this.name + "/components/" + this.name + "/data/";
+                    base = "https://filethis.github.io/" + this.name + "/components/" + this.name + "/data";
 
                 var filename;
                 if (this._selectedDeploymentIndex === 0)  // Drop-In
