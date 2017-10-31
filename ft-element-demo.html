@@ -105,8 +105,43 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                             Instance
                         </iron-label>
 
-                        <!-- Spacer -->
-                        <div class="flex" style="min-width:30px; "></div>
+                        <!-- Divider -->
+                        <div style="width:23px; height:70%; border-left:1px solid #DDD; margin-left:25px; "
+                        >
+                        </div>
+
+                        <!-- View rendered button -->
+                        <ft-labeled-icon-button
+                            id="viewRenderedButton"
+                            icon="dashboard"
+                            label="Render"
+                            hidden="[[!_instanceProvidesCode]]"
+                            on-tap="_onViewRenderedButtonClicked"
+                        >
+                        </ft-labeled-icon-button>
+
+                        <!-- "or" -->
+                        <iron-label
+                            style="font-family:Arial; font-size:12pt; white-space:nowrap; margin-left:8px; "
+                        >
+                            or
+                        </iron-label>
+
+                        <!-- View code button -->
+                        <ft-labeled-icon-button
+                            id="viewCodeButton"
+                            icon="code"
+                            label="Code"
+                            style="padding-left:8px; "
+                            hidden="[[!_instanceProvidesCode]]"
+                            on-tap="_onViewCodeButtonClicked"
+                        >
+                        </ft-labeled-icon-button>
+
+                        <!-- Divider -->
+                        <div style="width:23px; height:70%; border-left:1px solid #DDD; margin-left:22px; "
+                        >
+                        </div>
 
                         <!-- Deployment menu -->
                         <paper-dropdown-menu
@@ -132,17 +167,11 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
 
                         <!-- Viewport size menu -->
                         <paper-dropdown-menu
-                            hidden="true"
+                            hidden="[[!_showRendered]]"
                             id="viewportSizeMenu"
                             label="Viewport Size"
                             style="width:130px; "
                         >
-                        <!--<paper-dropdown-menu-->
-                            <!--hidden="[[!_showRendered]]"-->
-                            <!--id="viewportSizeMenu"-->
-                            <!--label="Viewport Size"-->
-                            <!--style="width:130px; "-->
-                        <!--&gt;-->
                             <paper-listbox
                                 class="dropdown-content"
                                 slot="dropdown-content"
@@ -162,38 +191,14 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
 
                         <!-- Size display -->
                         <div
-                            hidden="true"
                             id="sizeDisplay"
+                            hidden="[[!_showRendered]]"
                         >
-                        <!--<div-->
-                            <!--id="sizeDisplay"-->
-                            <!--hidden="[[!_showRendered]]"-->
-                        <!--&gt;-->
                             ([[_viewportWidth]] x [[_viewportHeight]])
                         </div>
 
                         <!-- Spacer -->
                         <div class="flex" style="min-width:30px; "></div>
-
-                        <!-- View code button -->
-                        <ft-labeled-icon-button
-                            id="viewCodeButton"
-                            icon="code"
-                            label="Code"
-                            hidden="[[!_instanceProvidesCode]]"
-                            on-tap="_onViewCodeButtonClicked"
-                        >
-                        </ft-labeled-icon-button>
-
-                        <!-- View rendered button -->
-                        <ft-labeled-icon-button
-                            id="viewRenderedButton"
-                            icon="dashboard"
-                            label="Render"
-                            hidden="[[!_instanceProvidesCode]]"
-                            on-tap="_onViewRenderedButtonClicked"
-                        >
-                        </ft-labeled-icon-button>
 
                     </div>
                 </div>
@@ -246,7 +251,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                                 class="flex"
                                 style="font-family:Arial; font-size:10pt; margin-left:16px; "
                             >
-                                Copy and paste this into the &lt;head&gt; element of your website's index.html file.
+                                Copy and paste this into your website's index.html file.
                             </iron-label>
 
                             <!-- Copy code button -->
@@ -526,7 +531,8 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                 },
 
                 _showRendered: {
-                    type: Boolean
+                    type: Boolean,
+                    value: false
                 },
             },
 
@@ -775,7 +781,8 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
             _selectedModeChanged: function(to, from)
             {
                 this._showCode = (to === "code");
-                this._showRendered = (to === "rendered");
+
+                this._showRendered = (to === "rendered") && this.getUrlParam("devel");
             },
 
             _onViewCodeButtonClicked: function(event, detail)
