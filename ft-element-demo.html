@@ -91,9 +91,9 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                     style="border-bottom:1px solid #DDD; "
                 >
 
-                    <!-- Size header -->
+                    <!-- Instance header -->
                     <div
-                        id="sizeHeader"
+                        id="instanceHeader"
                         class="layout horizontal center"
                         style="height:60px; padding-left:16px; padding-right:16px; "
                     >
@@ -167,11 +167,17 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
 
                         <!-- Viewport size menu -->
                         <paper-dropdown-menu
-                            hidden="[[!_showRendered]]"
+                            hidden="true"
                             id="viewportSizeMenu"
                             label="Viewport Size"
                             style="width:130px; "
                         >
+                        <!--<paper-dropdown-menu-->
+                            <!--hidden="[[!_showRendered]]"-->
+                            <!--id="viewportSizeMenu"-->
+                            <!--label="Viewport Size"-->
+                            <!--style="width:130px; "-->
+                        <!--&gt;-->
                             <paper-listbox
                                 class="dropdown-content"
                                 slot="dropdown-content"
@@ -192,8 +198,12 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                         <!-- Size display -->
                         <div
                             id="sizeDisplay"
-                            hidden="[[!_showRendered]]"
+                            hidden="true"
                         >
+                        <!--<div-->
+                            <!--id="sizeDisplay"-->
+                            <!--hidden="[[!_showRendered]]"-->
+                        <!--&gt;-->
                             ([[_viewportWidth]] x [[_viewportHeight]])
                         </div>
 
@@ -329,7 +339,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                         <!-- Substitute fixture values checkbox -->
                         <paper-checkbox
                                 checked="{{_substituteFixtureValues}}">
-                            Substitute fixture values into template (Warning: Contains secrets)
+                            Substitute fixture values into instance code (Warning: Contains secrets)
                         </paper-checkbox>
                     </div>
                 </iron-pages>
@@ -538,13 +548,6 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
 
             ready: function()
             {
-                // TODO: The "editor" property is undefined when the ready() method is called. That seems wrong. Fix.
-                this.async(function()
-                {
-                    this._configureEditor(this.$.polyfillCodeEditor);
-                    this._configureEditor(this.$.pageCodeEditor);
-                }.bind(this), 100)
-
                 //                var instanceSlot = this.$.instanceSlot;
 //                var elementSlotAssignedNodes = instanceSlot.assignedNodes();
 //                var target = elementSlotAssignedNodes[0];
@@ -553,7 +556,14 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
 
             _configureEditor: function(editor)
             {
+                // If already configured this editor
+                if (editor._didConfigure)
+                    return false;
+
+                // If editor's internal editor does not yet exist
                 var editorInternal = editor.editor;
+                if (!editorInternal)
+                    return false;
 
                 // Suppress deprecation warning
                 editorInternal.$blockScrolling = Infinity;
@@ -561,6 +571,10 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                 // Disable syntax checking
                 var session = editorInternal.getSession();
                 session.setUseWorker(false);
+
+                editor._didConfigure = true;
+
+                return true;
             },
 
 //            ready: function()
@@ -692,6 +706,11 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
 
             _onPolyfillCodeChanged:function()
             {
+                // This seems to be the best place to do this.
+                // Can't do in ready() because the internal editor is not yet defined there.
+                if (!this._configureEditor(this.$.polyfillCodeEditor))
+                    return;
+
                 // Deselect text
                 var editor = this.$.polyfillCodeEditor.editor;
                 if (editor !== undefined)
@@ -700,6 +719,11 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
 
             _onPageCodeChanged:function()
             {
+                // This seems to be the best place to do this.
+                // Can't do in ready() because the internal editor is not yet defined there.
+                if (!this._configureEditor(this.$.pageCodeEditor))
+                    return;
+
                 var haveCode = !!this.pageCode;
                 this._instanceProvidesCode = haveCode;
 
