@@ -29,7 +29,6 @@ limitations under the License.
 <link rel="import" href="../ft-url-param-behavior/ft-url-param-behavior.html">
 <link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../paper-item/paper-item.html">
-<link rel="import" href="../paper-item/paper-item.html">
 <link rel="import" href="../paper-listbox/paper-listbox.html">
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="ft-element-demo-header.html">
@@ -106,7 +105,9 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                         </iron-label>
 
                         <!-- Divider -->
-                        <div style="width:23px; height:70%; border-left:1px solid #DDD; margin-left:25px; "
+                        <div
+                            hidden="[[!_instanceProvidesCode]]"
+                            style="width:23px; height:70%; border-left:1px solid #DDD; margin-left:25px; "
                         >
                         </div>
 
@@ -122,6 +123,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
 
                         <!-- "or" -->
                         <iron-label
+                            hidden="[[!_instanceProvidesCode]]"
                             style="font-family:Arial; font-size:12pt; white-space:nowrap; margin-left:8px; "
                         >
                             or
@@ -139,7 +141,9 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                         </ft-labeled-icon-button>
 
                         <!-- Divider -->
-                        <div style="width:23px; height:70%; border-left:1px solid #DDD; margin-left:22px; "
+                        <div
+                            hidden="[[!_instanceProvidesCode]]"
+                            style="width:23px; height:70%; border-left:1px solid #DDD; margin-left:22px; "
                         >
                         </div>
 
