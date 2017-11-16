@@ -15,6 +15,7 @@ limitations under the License.
 -->
 
 
+<link rel="import" href="../ft-settings/ft-settings-applier-behavior.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../paper-button/paper-button.html">
@@ -77,21 +78,20 @@ limitations under the License.
         >
         </div>
 
-        <paper-button
-            raised
-            id="applyButton"
-            style="font-family:Arial; margin-top:16px; "
-            on-tap="_onApplyButtonTapped"
-        >
-            Apply
-        </paper-button>
-
     </template>
 
     <script>
         Polymer({
 
             is: 'ft-config-panel',
+
+            behaviors: [
+                FileThis.SettingsApplierBehavior,
+            ],
+
+            listeners: {
+                'iron-signal-settings-publisher-changed': '_onSettingsPublisherChanged'
+            },
 
             properties:
             {
@@ -130,20 +130,6 @@ limitations under the License.
                     },
             },
 
-            _onApplyButtonTapped: function(event)
-            {
-                var configuration = this._selectedConfiguration;
-                if (!configuration)
-                    return;
-                var element = configuration.element;
-                if (!element)
-                    return;
-                var settings = element.settings;
-                if (!settings)
-                    return;
-                element.applySettings(settings);
-            },
-
             _onConfigurationsChanged: function(to, from)
             {
                 this._showConfigurationMenu = this._shouldShowConfigurationMenu();
@@ -160,19 +146,23 @@ limitations under the License.
 
                 // Add new panels
                 var configurations = this.configurations;
-                if (!configurations)
-                    return;
                 if (configurations.length === 0)
                     return;
                 var count = configurations.length;
                 for (var index = 0; index < count; index++)
                 {
                     var configuration = configurations[index];
-                    var div = document.createElement('div');
-                    configuration.element = div;
-                    div.innerHTML = configuration.name;
-                    div.style.display = "none";
-                    this.$.panels.appendChild(div);
+
+                    // Create a parent div to hold the editor
+                    var panel = document.createElement('div');
+                    panel.style.display = "none";
+                    configuration.panel = panel;
+                    this.$.panels.appendChild(panel);
+
+                    // Create the settings editor
+                    var settingsEditor = document.createElement(configuration.settingsEditorName);
+                    configuration.settingsEditor = settingsEditor;
+                    panel.appendChild(settingsEditor);
                 }
 
                 // Flush all changes
@@ -181,12 +171,41 @@ limitations under the License.
                 this._firstConfigurationLabel = configurations[0].label;
             },
 
-            _shouldShowConfigurationMenu: function()
+            _onSettingsPublisherChanged: function(event)
+            {
+                var publisherName = event.detail;
+
+                // Get the editor's settings
+                var configuration = this._findConfigurationWithSettingsEditorNamed(publisherName);
+                if (!configuration)
+                    return;
+                var editor = configuration.settingsEditor;
+                var editorSettings = editor.settings;
+
+                // Find all the settings targets
+                var targetName = configuration.settingsTargetName;
+                var targets = this.findSettingsTargetsNamed(targetName);
+
+                // Apply the editor's settings settings to the targets
+                this.applySettingsToTargets(editorSettings, targets);
+            },
+
+            _findConfigurationWithSettingsEditorNamed: function(name)
             {
                 var configurations = this.configurations;
-                if (!configurations)
-                    return false;
-                if (configurations.length <= 1)
+                var count = configurations.length;
+                for (var index = 0; index < count; index++)
+                {
+                    var configuration = configurations[index];
+                    if (configuration.settingsEditorName === name)
+                        return configuration;
+                }
+                return null;
+            },
+
+            _shouldShowConfigurationMenu: function()
+            {
+                if (this.configurations.length <= 1)
                     return false;
                 return true;
             },
@@ -199,8 +218,6 @@ limitations under the License.
                 if (selectedConfigurationIndex === undefined)
                     return;
                 var configurations = this.configurations;
-                if (!configurations)
-                    return;
                 if (configurations.length === 0)
                     return;
                 var selectedConfiguration = configurations[selectedConfigurationIndex];
@@ -210,9 +227,9 @@ limitations under the License.
             _onSelectedConfigurationChanged: function(to, from)
             {
                 if (from)
-                    from.element.style.display = "none";
+                    from.panel.style.display = "none";
                 if (to)
-                    to.element.style.display = "block";
+                    to.panel.style.display = "block";
             },
 
         })

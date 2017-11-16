@@ -70,7 +70,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
             <ft-accordion-item
                 title="Config"
                 hidden="[[!showConfig]]"
-                style="border-right:1px solid #DDD; "
+                style="border-right:2px solid #DDD; "
             >
                 <div slot="content">
                     <slot name="config">
@@ -657,6 +657,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                     .then(function(pageCodeTemplate)
                     {
                         var pageCode = this._makeSubstitutionsInto(pageCodeTemplate);
+                        pageCode += this._buildSettingsInitializers();
                         this.pageCode = pageCode;
                         var editor = this.$.pageCodeEditor.editor;
                         editor.selection.selectFileStart();
@@ -665,6 +666,12 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                     {
                         log.error("Could not load local page code template file: " + url);
                     }.bind(this));
+            },
+
+            _buildSettingsInitializers: function()
+            {
+                var code = "\n<ft-settings-initializer>\n</ft-settings-initializer>";
+                return code;
             },
 
             _makeSubstitutionsInto: function(template)
