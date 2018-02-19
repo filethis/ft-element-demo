@@ -15,6 +15,7 @@ limitations under the License.
 -->
 
 
+<link rel="import" href="../app-storage/app-localstorage/app-localstorage-document.html">
 <link rel="import" href="../ft-clipboard-behavior/ft-clipboard-behavior.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../iron-pages/iron-pages.html">
@@ -56,6 +57,10 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
             }
         </style>
 
+        <app-localstorage-document key="configPanelIsOpen" data="{{_configPanelIsOpen}}">
+        </app-localstorage-document>
+
+
         <ft-element-demo-header
             name="[[name]]"
             hidden="[[!showHeader]]"
@@ -68,8 +73,9 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
 
             <!-- Config panel -->
             <ft-accordion-item
-                title="Config"
+                heading="Config"
                 hidden="[[!showConfig]]"
+                is-open="{{_configPanelIsOpen}}"
                 style="border-right:2px solid #DDD; "
             >
                 <div slot="content">
@@ -97,7 +103,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                         style="height:60px; padding-left:16px; padding-right:16px; "
                     >
 
-                        <!-- Title -->
+                        <!-- Heading -->
                         <iron-label
                             style="font-family:Arial; font-size:16pt; white-space:nowrap; "
                         >
@@ -171,8 +177,8 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
 
                         <!-- Viewport size menu -->
                         <paper-dropdown-menu
-                            hidden="true"
                             id="viewportSizeMenu"
+                            hidden="true"
                             label="Viewport Size"
                             style="width:130px; "
                         >
@@ -253,7 +259,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                         <!-- Polyfill code header -->
                         <div class="layout horizontal center">
 
-                            <!-- Title -->
+                            <!-- Heading -->
                             <iron-label
                                 style="font-family:Arial; font-size:14pt; white-space:nowrap; "
                             >
@@ -298,7 +304,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                             style="padding-top:10px; "
                         >
 
-                            <!-- Title -->
+                            <!-- Heading -->
                             <iron-label
                                 style="font-family:Arial; font-size:14pt; white-space:nowrap; "
                             >
@@ -370,7 +376,8 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
 
             listeners:
             {
-                'iron-resize': '_onIronResizeThis'
+                'iron-resize': '_onIronResizeThis',
+                'internal-settings-changed': '_onInternalSettingsChanged',
             },
 
             observers:
@@ -430,6 +437,10 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                 {
                     type: Object,
                     value: false
+                },
+
+                configurations:{
+                    type: Array,
                 },
 
                 _selectedMode: {
@@ -548,6 +559,12 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                     type: Boolean,
                     value: false
                 },
+
+                _configPanelIsOpen:
+                {
+                    type: Boolean,
+                    value: true,
+                },
             },
 
             ready: function()
@@ -623,11 +640,31 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                     }.bind(this))
                     .catch(function(error)
                     {
-                        log.error("Could not load local polyfill code template file: " + url);
+                        console.log("Could not load local polyfill code template file: " + url);
                     }.bind(this));
             },
 
+            _onInternalSettingsChanged: function(event)
+            {
+                this._updateCode();
+            },
+
             _onCodeDependencyChanged: function()
+            {
+                this._updateCode();
+            },
+
+            _updateCode: function()
+            {
+                this._updateCodeDebouncer = Polymer.Debouncer.debounce
+                (
+                    this._updateCodeDebouncer,
+                    Polymer.Async.timeOut.after(60),
+                    this._updateCodeDebounced.bind(this)
+                );
+            },
+
+            _updateCodeDebounced: function()
             {
                 // Load the code template
                 var base;
@@ -664,13 +701,29 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                     }.bind(this))
                     .catch(function(error)
                     {
-                        log.error("Could not load local page code template file: " + url);
+                        console.log("Could not load local page code template file: " + url);
                     }.bind(this));
             },
 
             _buildSettingsInitializers: function()
             {
-                var code = "\n<ft-settings-initializer>\n</ft-settings-initializer>";
+                if (!this.configurations)
+                    return;
+
+                var code = "";
+                var configurations = this.configurations;
+                var count = configurations.length;
+                for (var index = 0;
+                     index < count;
+                     index++)
+                {
+                    var configuration = configurations[index];
+                    var settingsEditor = configuration.settingsEditor;
+                    if (!settingsEditor)
+                        continue;
+                    code += settingsEditor.generateSettings();
+                }
+
                 return code;
             },
 
