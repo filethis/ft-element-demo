@@ -693,9 +693,12 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                 return this.httpGet(url, options)
                     .then(function(pageCodeTemplate)
                     {
-                        var pageCode = this._makeSubstitutionsInto(pageCodeTemplate);
-                        pageCode += this._buildSettingsInitializers();
+                        var settingsInitializers = this._buildSettingsInitializers();
+                        var settingsImports = this._buildSettingsImports();
+
+                        var pageCode = this._makeSubstitutionsInto(pageCodeTemplate, settingsImports, settingsInitializers);
                         this.pageCode = pageCode;
+
                         var editor = this.$.pageCodeEditor.editor;
                         editor.selection.selectFileStart();
                     }.bind(this))
@@ -705,10 +708,32 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                     }.bind(this));
             },
 
+            _buildSettingsImports: function()
+            {
+                if (!this.configurations)
+                    return "";
+
+                var code = "";
+                var configurations = this.configurations;
+                var count = configurations.length;
+                for (var index = 0;
+                     index < count;
+                     index++)
+                {
+                    var configuration = configurations[index];
+                    var settingsEditor = configuration.settingsEditor;
+                    if (!settingsEditor)
+                        continue;
+                    code += settingsEditor.generateImports();
+                }
+
+                return code;
+            },
+
             _buildSettingsInitializers: function()
             {
                 if (!this.configurations)
-                    return;
+                    return "";
 
                 var code = "";
                 var configurations = this.configurations;
@@ -727,17 +752,19 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                 return code;
             },
 
-            _makeSubstitutionsInto: function(template)
+            _makeSubstitutionsInto: function(template, settingsImports, settingsInitializers)
             {
                 // TODO: Find a more efficient way to do this
 
                 var code = template;
                 code = code.replace(/{{NAME}}/g, this.name);
+                code = code.replace(/{{SETTINGS_IMPORTS}}/g, settingsImports);
                 if (this._substituteFixtureValues)
                 {
                     code = code.replace(/{{ACCOUNT_ID}}/g, this.accountId);
                     code = code.replace(/{{TOKEN}}/g, this.token);
                 }
+                code = code.replace(/{{SETTINGS_INITIALIZERS}}/g, settingsInitializers);
                 return code;
             },
 
