@@ -540,7 +540,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                     {
                         type: Array,
                         notify: true,
-                        value: [ "Drop-In", "Local" ]
+                        value: [ "Drop-In", "Custom" ]
                     },
 
                 _selectedDeploymentIndex:
@@ -629,7 +629,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                 var polyfillCodeTemplate;
                 if (isDropIn)  // Drop-In
                     polyfillCodeTemplate = this._getPolyfillDropInTemplate();
-                else // Local
+                else // Custom
                     polyfillCodeTemplate = this._getPolyfillCustomTemplate();
                 this.polyfillCode = this._makeSubstitutionsInto(polyfillCodeTemplate);
 
