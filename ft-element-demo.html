@@ -60,7 +60,6 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
         <app-localstorage-document key="configPanelIsOpen" data="{{_configPanelIsOpen}}">
         </app-localstorage-document>
 
-
         <ft-element-demo-header
             name="[[name]]"
             hidden="[[!showHeader]]"
@@ -393,6 +392,12 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                     value: "ft-thing"
                 },
 
+                version: {
+                    type: String,
+                    notify: true,
+                    value: "latest"
+                },
+
                 showHeader: {
                     type: Object,
                     notify: true,
@@ -535,7 +540,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                     {
                         type: Array,
                         notify: true,
-                        value: [ "Drop-In", "Production" ]
+                        value: [ "Drop-In", "Local" ]
                     },
 
                 _selectedDeploymentIndex:
@@ -604,44 +609,35 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
 //                this.$.styler.target = instance;
 //            },
 
+            _script: "script",
+
+            _getPolyfillDropInTemplate: function()
+            {
+                return "<!-- Put this into your <head> element -->\n" +
+                       "<" + this._script + " src=\"http://connect.filethis.com/webcomponents/webcomponentsjs/v1.0.0/webcomponents-loader.js\"></" + this._script + ">\n";
+            },
+
+            _getPolyfillCustomTemplate: function()
+            {
+                return "<!-- Put this into your <head> element -->\n" +
+                       "<" + this._script + " src\"../bower_components/webcomponentsjs/webcomponents-loader.js\">" + "</" + this._script + ">\n";
+            },
+
             _onSelectedDeploymentIndexChanged: function()
             {
-                // Load the code template
-                var base;
-                if (this.getUrlParam("devel"))
-                    base = "../bower_components/ft-element-demo/data";
-                else
-                    base = "https://filethis.github.io/ft-connect-wizard/components/ft-element-demo/data";  // TODO: This is brittle!
+                var isDropIn = (this._selectedDeploymentIndex === 0);
+                var polyfillCodeTemplate;
+                if (isDropIn)  // Drop-In
+                    polyfillCodeTemplate = this._getPolyfillDropInTemplate();
+                else // Local
+                    polyfillCodeTemplate = this._getPolyfillCustomTemplate();
+                this.polyfillCode = this._makeSubstitutionsInto(polyfillCodeTemplate);
 
-                var filename;
-                if (this._selectedDeploymentIndex === 0)  // Drop-In
-                    filename = "code-polyfill-drop-in.html";
-                else // Production
-                    filename = "code-polyfill-production.html";
-
-                var url = base + "/" + filename;
-
-                var options =
-                    {
-                        responseType: "text",
-                        headers:
-                            {
-                                Accept: "text/plain"
-                            }
-                    };
-
-                return this.httpGet(url, options)
-                    .then(function(polyfillCodeTemplate)
-                    {
-                        var polyfillCode = this._makeSubstitutionsInto(polyfillCodeTemplate);
-                        this.polyfillCode = polyfillCode;
-                        var editor = this.$.polyfillCodeEditor.editor;
-                        editor.selection.selectFileStart();
-                    }.bind(this))
-                    .catch(function(error)
-                    {
-                        console.log("Could not load local polyfill code template file: " + url);
-                    }.bind(this));
+                setTimeout(function()
+                {
+                    var editor = this.$.polyfillCodeEditor.editor;
+                    editor.selection.selectFileStart();
+                }.bind(this), 1);
             },
 
             _onInternalSettingsChanged: function(event)
@@ -666,46 +662,22 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
 
             _updateCodeDebounced: function()
             {
-                // Load the code template
-                var base;
-                if (this.getUrlParam("devel"))
-                    base = "../bower_components/" + this.name + "/data";
-                else
-                    base = "https://filethis.github.io/" + this.name + "/components/" + this.name + "/data";
+                var isDropIn = (this._selectedDeploymentIndex === 0);
 
-                var filename;
-                if (this._selectedDeploymentIndex === 0)  // Drop-In
-                    filename = "code-page-drop-in.html";
-                else // Production
-                    filename = "code-page-production.html";
+                // Given the target, ask for template
+                var instance = this._getInstance();
+                var pageCodeTemplate = instance.getPageCodeTemplate(isDropIn);
 
-                var url = base + "/" + filename;
+                var settingsInitializers = this._buildSettingsInitializers();
+                var settingsImports = this._buildSettingsImports();
 
-                var options =
-                    {
-                        responseType: "text",
-                        headers:
-                            {
-                                Accept: "text/plain"
-                            }
-                    };
+                this.pageCode = this._makeSubstitutionsInto(pageCodeTemplate, settingsImports, settingsInitializers);
 
-                return this.httpGet(url, options)
-                    .then(function(pageCodeTemplate)
-                    {
-                        var settingsInitializers = this._buildSettingsInitializers();
-                        var settingsImports = this._buildSettingsImports();
-
-                        var pageCode = this._makeSubstitutionsInto(pageCodeTemplate, settingsImports, settingsInitializers);
-                        this.pageCode = pageCode;
-
-                        var editor = this.$.pageCodeEditor.editor;
-                        editor.selection.selectFileStart();
-                    }.bind(this))
-                    .catch(function(error)
-                    {
-                        console.log("Could not load local page code template file: " + url);
-                    }.bind(this));
+                setTimeout(function()
+                {
+                    var editor = this.$.pageCodeEditor.editor;
+                    editor.selection.selectFileStart();
+                }.bind(this), 1);
             },
 
             _buildSettingsImports: function()
@@ -908,9 +880,10 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
             _onViewRenderedButtonClicked: function(event, detail)
             {
                 this._selectedMode = "rendered";
-            }
+            },
 
         });
 
     </script>
+
 </dom-module>
