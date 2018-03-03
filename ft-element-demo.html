@@ -73,7 +73,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
             <!-- Config panel -->
             <ft-accordion-item
                 heading="Config"
-                hidden="[[!showConfig]]"
+                hidden="true"
                 is-open="{{_configPanelIsOpen}}"
                 style="border-right:2px solid #DDD; "
             >
@@ -82,6 +82,17 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                     </slot>
                 </div>
             </ft-accordion-item>
+            <!--<ft-accordion-item-->
+                <!--heading="Config"-->
+                <!--hidden="[[!showConfig]]"-->
+                <!--is-open="{{_configPanelIsOpen}}"-->
+                <!--style="border-right:2px solid #DDD; "-->
+            <!--&gt;-->
+                <!--<div slot="content">-->
+                    <!--<slot name="config">-->
+                    <!--</slot>-->
+                <!--</div>-->
+            <!--</ft-accordion-item>-->
 
             <!-- Instance panel -->
             <div
@@ -666,6 +677,8 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
 
                 // Given the target, ask for template
                 var instance = this._getInstance();
+                if (!instance)
+                    return;
                 var pageCodeTemplate = instance.getPageCodeTemplate(isDropIn);
 
                 var settingsInitializers = this._buildSettingsInitializers();
