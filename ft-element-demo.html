@@ -625,7 +625,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
             _getPolyfillDropInTemplate: function()
             {
                 return "<!-- Put this into your <head> element -->\n" +
-                       "<" + this._script + " src=\"http://connect.filethis.com/webcomponents/webcomponentsjs/v1.0.0/webcomponents-loader.js\"></" + this._script + ">\n";
+                       "<" + this._script + " src=\"https://connect.filethis.com/webcomponents/webcomponentsjs/1.0.0/webcomponents-loader.js\"></" + this._script + ">\n";
             },
 
             _getPolyfillCustomTemplate: function()
@@ -678,6 +678,9 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                 // Given the target, ask for template
                 var instance = this._getInstance();
                 if (!instance)
+                    return;
+                var hasTemplateFunction = instance.hasOwnProperty("getPageCodeTemplate");
+                if (!hasTemplateFunction)
                     return;
                 var pageCodeTemplate = instance.getPageCodeTemplate(isDropIn);
 
