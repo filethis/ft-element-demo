@@ -496,9 +496,14 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                         value: [
                             {
                                 name: "Full",
-                                width: 0,
-                                height: 0
+                                width: 800,
+                                height: 500
                             },
+                            // {
+                            //     name: "Full",
+                            //     width: 0,
+                            //     height: 0
+                            // },
                             {
                                 name: "Galaxy S5",
                                 width: 360,
@@ -679,7 +684,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                 var instance = this._getInstance();
                 if (!instance)
                     return;
-                var hasTemplateFunction = instance.hasOwnProperty("getPageCodeTemplate");
+                var hasTemplateFunction = !!instance.getPageCodeTemplate;
                 if (!hasTemplateFunction)
                     return;
                 var pageCodeTemplate = instance.getPageCodeTemplate(isDropIn);
@@ -845,37 +850,56 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                 var viewport = this.$.fakeViewport;
                 var rendered = this.$.rendered;
 
-                if (isFullSize)
-                {
-                    // Set full size
-                    viewport.style.width = "100%";
-                    viewport.style.height = "100%";
 
-                    // Border
-                    viewport.style.removeProperty("border");
-                    viewport.style.removeProperty("box-shadow");
-                    rendered.style.border = "1px solid black";
+                rendered.style.boxSizing = "border-box";
 
-                    // Margin
-                    viewport.style.removeProperty("margin");
-                }
-                else // fixed size
-                {
-                    // Set fixed size
-                    var viewportSize = this._viewportSizes[index];
-                    viewport.style.width = viewportSize.width + "px";
-                    viewport.style.height = viewportSize.height + "px";
+                // Set fixed size
+                var viewportSize = this._viewportSizes[index];
+                viewport.style.width = viewportSize.width + "px";
+                viewport.style.height = viewportSize.height + "px";
 
-                    // Border
-                    viewport.style.border = "1px solid black";
-                    viewport.style.boxShadow = "5px 5px 4px #BBB";
-                    rendered.style.removeProperty("border");
+                // Border
+                viewport.style.border = "1px solid black";
+                viewport.style.boxShadow = "5px 5px 4px #BBB";
+                rendered.style.removeProperty("border");
 
-                    // Margin (center within parent)
-                    viewport.style.margin = "auto";
-                    viewport.style.marginTop = "16px";
-                    viewport.style.marginBottom = "16px";
-                }
+                // Margin (center within parent)
+                viewport.style.margin = "auto";
+                viewport.style.marginTop = "16px";
+                viewport.style.marginBottom = "16px";
+
+
+                // if (isFullSize)
+                // {
+                //     // Set full size
+                //     viewport.style.width = "100%";
+                //     viewport.style.height = "100%";
+                //
+                //     // Border
+                //     viewport.style.removeProperty("border");
+                //     viewport.style.removeProperty("box-shadow");
+                //     rendered.style.border = "1px solid black";
+                //
+                //     // Margin
+                //     viewport.style.removeProperty("margin");
+                // }
+                // else // fixed size
+                // {
+                //     // Set fixed size
+                //     var viewportSize = this._viewportSizes[index];
+                //     viewport.style.width = viewportSize.width + "px";
+                //     viewport.style.height = viewportSize.height + "px";
+                //
+                //     // Border
+                //     viewport.style.border = "1px solid black";
+                //     viewport.style.boxShadow = "5px 5px 4px #BBB";
+                //     rendered.style.removeProperty("border");
+                //
+                //     // Margin (center within parent)
+                //     viewport.style.margin = "auto";
+                //     viewport.style.marginTop = "16px";
+                //     viewport.style.marginBottom = "16px";
+                // }
 
                 // Tell the iron-list to reconstrain itself
                 this.notifyResize();
