@@ -652,7 +652,8 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                 setTimeout(function()
                 {
                     var editor = this.$.polyfillCodeEditor.editor;
-                    editor.selection.selectFileStart();
+                    if (editor !== undefined)
+                        editor.selection.selectFileStart();
                 }.bind(this), 1);
             },
 
@@ -697,7 +698,8 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                 setTimeout(function()
                 {
                     var editor = this.$.pageCodeEditor.editor;
-                    editor.selection.selectFileStart();
+                    if (editor !== undefined)
+                        editor.selection.selectFileStart();
                 }.bind(this), 1);
             },
 
