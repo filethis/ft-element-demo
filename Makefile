@@ -1,6 +1,6 @@
 # Project configuration
 NAME=ft-element-demo
-VERSION=1.0.11
+VERSION=1.0.12
 LOCAL_PORT=3513
 GITHUB_USER=filethis
 BOWER_NAMESPACE=FileThis
