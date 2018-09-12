@@ -97,13 +97,13 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                     >
                     </div>
 
-                    <!-- View rendered button -->
+                    <!-- View code button -->
                     <ft-labeled-icon-button
-                        id="viewRenderedButton"
-                        icon="dashboard"
-                        label="Render"
+                        id="viewCodeButton"
+                        icon="code"
+                        label="Code"
                         hidden="[[!_instanceProvidesCode]]"
-                        on-tap="_onViewRenderedButtonClicked"
+                        on-tap="_onViewCodeButtonClicked"
                     >
                     </ft-labeled-icon-button>
 
@@ -115,14 +115,14 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                         or
                     </iron-label>
 
-                    <!-- View code button -->
+                    <!-- View rendered button -->
                     <ft-labeled-icon-button
-                        id="viewCodeButton"
-                        icon="code"
-                        label="Code"
-                        style="padding-left:8px; "
+                        id="viewRenderedButton"
+                        icon="dashboard"
+                        label="Render"
                         hidden="[[!_instanceProvidesCode]]"
-                        on-tap="_onViewCodeButtonClicked"
+                        style="padding-left:8px; "
+                        on-tap="_onViewRenderedButtonClicked"
                     >
                     </ft-labeled-icon-button>
 
@@ -598,7 +598,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
             _getPolyfillDropInTemplate: function()
             {
                 return "<!-- Put this into your <head> element -->\n" +
-                       "<" + this._script + " src=\"https://${PUBLICATION_DOMAIN}/webcomponents/webcomponentsjs/1.0.0/webcomponents-loader.js\"></" + this._script + ">\n";
+                       "<" + this._script + " src=\"https://connect.filethis.com/webcomponents/webcomponentsjs/1.0.0/webcomponents-loader.js\"></" + this._script + ">\n";
             },
 
             _getPolyfillCustomTemplate: function()
@@ -658,9 +658,9 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                     return;
                 var pageCodeTemplate = instance.getPageCodeTemplate(isDropIn);
 
-                var settingsInitializers = this._buildSettingsElements();
+                var settingsElements = this._buildSettingsElements();
 
-                this.pageCode = this._makeSubstitutionsInto(pageCodeTemplate, settingsInitializers);
+                this.pageCode = this._makeSubstitutionsInto(pageCodeTemplate, settingsElements);
 
                 setTimeout(function()
                 {
@@ -675,7 +675,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                 if (!this.configurations)
                     return "";
 
-                var code = "";
+                var settingsElements = "";
                 var configurations = this.configurations;
                 var count = configurations.length;
                 for (var index = 0;
@@ -686,16 +686,19 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                     var settingsEditor = configuration.settingsEditor;
                     if (!settingsEditor)
                         continue;
-                    code += settingsEditor.generateSettingsElement();
+                    var settingsElement = settingsEditor.generateSettingsElement();
+                    if (settingsElement)
+                        settingsElements += settingsElement + "\n";
                 }
 
-                return code;
+                if (settingsElements)
+                    settingsElements = "\n" + settingsElements;
+
+                return settingsElements;
             },
 
-            _makeSubstitutionsInto: function(template, settingsInitializers)
+            _makeSubstitutionsInto: function(template, settingsElements)
             {
-                // TODO: Find a more efficient way to do this
-
                 var code = template;
                 code = code.replace(/{{NAME}}/g, this.name);
                 if (this._substituteFixtureValues)
@@ -703,7 +706,9 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                     code = code.replace(/{{ACCOUNT_ID}}/g, this.accountId);
                     code = code.replace(/{{TOKEN}}/g, this.token);
                 }
-                code = code.replace(/{{SETTINGS_INITIALIZERS}}/g, settingsInitializers);
+                code = code.replace(/{{SETTINGS_ELEMENTS}}/g, settingsElements);
+                if (settingsElements)
+                    code += "\n";
                 return code;
             },
 
