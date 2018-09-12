@@ -67,303 +67,271 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
         </ft-element-demo-header>
 
         <div
-            class="flex layout horizontal"
+            id="instancePanel"
+            class="flex layout vertical"
         >
-
-            <!-- Config panel -->
-            <ft-accordion-item
-                heading="Config"
-                hidden="true"
-                is-open="{{_configPanelIsOpen}}"
-                style="border-right:2px solid #DDD; "
-            >
-                <div slot="content">
-                    <slot name="config">
-                    </slot>
-                </div>
-            </ft-accordion-item>
-            <!--<ft-accordion-item-->
-                <!--heading="Config"-->
-                <!--hidden="[[!showConfig]]"-->
-                <!--is-open="{{_configPanelIsOpen}}"-->
-                <!--style="border-right:2px solid #DDD; "-->
-            <!--&gt;-->
-                <!--<div slot="content">-->
-                    <!--<slot name="config">-->
-                    <!--</slot>-->
-                <!--</div>-->
-            <!--</ft-accordion-item>-->
-
-            <!-- Instance panel -->
+            <!-- Instance header -->
             <div
-                id="instancePanel"
-                class="flex layout vertical"
+                class="layout vertical"
+                style="border-bottom:1px solid #DDD; "
             >
 
                 <!-- Instance header -->
                 <div
-                    class="layout vertical"
-                    style="border-bottom:1px solid #DDD; "
+                    id="instanceHeader"
+                    class="layout horizontal center"
+                    style="height:60px; padding-left: 16px; padding-right: 16px; "
                 >
 
-                    <!-- Instance header -->
+                    <!-- Heading -->
+                    <iron-label
+                        style="font-family:Arial; font-size: 16pt; white-space:nowrap; "
+                    >
+                        Instance
+                    </iron-label>
+
+                    <!-- Divider -->
                     <div
-                        id="instanceHeader"
+                        hidden="[[!_instanceProvidesCode]]"
+                        style="width:23px; height: 70%; border-left: 1px solid #DDD; margin-left: 25px; "
+                    >
+                    </div>
+
+                    <!-- View rendered button -->
+                    <ft-labeled-icon-button
+                        id="viewRenderedButton"
+                        icon="dashboard"
+                        label="Render"
+                        hidden="[[!_instanceProvidesCode]]"
+                        on-tap="_onViewRenderedButtonClicked"
+                    >
+                    </ft-labeled-icon-button>
+
+                    <!-- "or" -->
+                    <iron-label
+                        hidden="[[!_instanceProvidesCode]]"
+                        style="font-family:Arial; font-size: 12pt; white-space:nowrap; margin-left: 8px; "
+                    >
+                        or
+                    </iron-label>
+
+                    <!-- View code button -->
+                    <ft-labeled-icon-button
+                        id="viewCodeButton"
+                        icon="code"
+                        label="Code"
+                        style="padding-left:8px; "
+                        hidden="[[!_instanceProvidesCode]]"
+                        on-tap="_onViewCodeButtonClicked"
+                    >
+                    </ft-labeled-icon-button>
+
+                    <!-- Divider -->
+                    <div
+                        hidden="[[!_instanceProvidesCode]]"
+                        style="width:23px; height: 70%; border-left: 1px solid #DDD; margin-left: 22px; "
+                    >
+                    </div>
+
+                    <!-- Deployment menu -->
+                    <paper-dropdown-menu
+                        hidden="[[!_showCode]]"
+                        id="deploymentMenu"
+                        label="Deployment"
+                        style="width:120px; "
+                    >
+                        <paper-listbox
+                            class="dropdown-content"
+                            slot="dropdown-content"
+                            selected="{{_selectedDeploymentIndex}}"
+                        >
+                            <template
+                                is="dom-repeat"
+                                items="[[_deployments]]"
+                                as="deployment"
+                            >
+                                <paper-item>[[deployment]]</paper-item>
+                            </template>
+                        </paper-listbox>
+                    </paper-dropdown-menu>
+
+                    <!-- Viewport size menu -->
+                    <paper-dropdown-menu
+                        id="viewportSizeMenu"
+                        label="Viewport Size"
+                        style="width:130px; padding-left:16px; "
+                    >
+                        <!--<paper-dropdown-menu-->
+                        <!--hidden="[[!_showRendered]]"-->
+                        <!--id="viewportSizeMenu"-->
+                        <!--label="Viewport Size"-->
+                        <!--style="width:130px; "-->
+                        <!--&gt;-->
+                        <paper-listbox
+                            class="dropdown-content"
+                            slot="dropdown-content"
+                            selected="{{_selectedViewportSizeIndex}}"
+                        >
+                            <template
+                                is="dom-repeat"
+                                items="[[_viewportSizes]]"
+                                as="viewportSize"
+                            >
+                                <paper-item>[[viewportSize.name]]</paper-item>
+                            </template>
+                        </paper-listbox>
+                    </paper-dropdown-menu>
+
+                    <div style="width:10px; min-width:20px; "></div>
+
+                    <!-- Size display -->
+                    <div
+                        id="sizeDisplay"
+                        hidden="true"
+                    >
+                        <!--<div-->
+                        <!--id="sizeDisplay"-->
+                        <!--hidden="[[!_showRendered]]"-->
+                        <!--&gt;-->
+                        ([[_viewportWidth]] x [[_viewportHeight]])
+                    </div>
+
+                    <!-- Spacer -->
+                    <div class="flex" style="min-width:30px; "></div>
+
+                </div>
+            </div>
+
+            <!-- Rendered or code -->
+            <iron-pages
+                id="renderedOrCode"
+                class="flex layout vertical"
+                attr-for-selected="name"
+                selected="[[_selectedMode]]"
+            >
+
+                <!-- Rendered -->
+                <div
+                    id="rendered"
+                    name="rendered"
+                    class="flex scroll"
+                >
+
+                    <!-- Fake viewport -->
+                    <div id="fakeViewport">
+
+                        <!-- Instance slot -->
+                        <slot
+                            id="instanceSlot"
+                            name="instance"
+                        >
+                        </slot>
+                    </div>
+                </div>
+
+                <!-- Code -->
+                <div
+                    name="code"
+                    class="flex layout vertical"
+                    style="padding:20px; "
+                >
+                    <!-- Polyfill code header -->
+                    <div class="layout horizontal center">
+
+                        <!-- Heading -->
+                        <iron-label
+                            style="font-family:Arial; font-size: 14pt; white-space:nowrap; "
+                        >
+                            Web Components Polyfill Loader
+                        </iron-label>
+
+                        <!-- Instructions -->
+                        <iron-label
+                            class="flex"
+                            style="font-family:Arial; font-size: 10pt; margin-left: 16px; "
+                        >
+                            Copy and paste this into your website's index.html file.
+                        </iron-label>
+
+                        <!-- Copy code button -->
+                        <ft-labeled-icon-button
+                            icon="content-paste"
+                            label="Copy"
+                            style="margin-left:16px; "
+                            on-click="_onCopyPolyfillCodeButtonClicked"
+                        >
+                        </ft-labeled-icon-button>
+                    </div>
+
+                    <!-- Polyfill code -->
+                    <juicy-ace-editor
+                        id="polyfillCodeEditor"
+                        style="height:100px; border: 1px solid #DDD; margin-top: 5px; "
+                        readonly
+                        theme="ace/theme/chrome"
+                        mode="ace/mode/html"
+                        fontsize="14px"
+                        softtabs
+                        value="[[polyfillCode]]"
+                        tabsize="4"
+                    >
+                    </juicy-ace-editor>
+
+                    <!-- Page code header -->
+                    <div
                         class="layout horizontal center"
-                        style="height:60px; padding-left: 16px; padding-right: 16px; "
+                        style="padding-top:10px; "
                     >
 
                         <!-- Heading -->
                         <iron-label
-                            style="font-family:Arial; font-size: 16pt; white-space:nowrap; "
+                            style="font-family:Arial; font-size: 14pt; white-space:nowrap; "
                         >
-                            Instance
+                            Page Code
                         </iron-label>
 
-                        <!-- Divider -->
-                        <div
-                            hidden="[[!_instanceProvidesCode]]"
-                            style="width:23px; height: 70%; border-left: 1px solid #DDD; margin-left: 25px; "
-                        >
-                        </div>
-
-                        <!-- View rendered button -->
-                        <ft-labeled-icon-button
-                            id="viewRenderedButton"
-                            icon="dashboard"
-                            label="Render"
-                            hidden="[[!_instanceProvidesCode]]"
-                            on-tap="_onViewRenderedButtonClicked"
-                        >
-                        </ft-labeled-icon-button>
-
-                        <!-- "or" -->
+                        <!-- Instructions -->
                         <iron-label
-                            hidden="[[!_instanceProvidesCode]]"
-                            style="font-family:Arial; font-size: 12pt; white-space:nowrap; margin-left: 8px; "
+                            class="flex"
+                            style="font-family:Arial; font-size: 10pt; margin-left: 16px; "
                         >
-                            or
+                            Copy and paste this into the appropriate page of your website.
                         </iron-label>
 
-                        <!-- View code button -->
+                        <!-- Copy code button -->
                         <ft-labeled-icon-button
-                            id="viewCodeButton"
-                            icon="code"
-                            label="Code"
-                            style="padding-left:8px; "
-                            hidden="[[!_instanceProvidesCode]]"
-                            on-tap="_onViewCodeButtonClicked"
+                            icon="content-paste"
+                            label="Copy"
+                            style="margin-left:16px; "
+                            on-click="_onCopyPageCodeButtonClicked"
                         >
                         </ft-labeled-icon-button>
-
-                        <!-- Divider -->
-                        <div
-                            hidden="[[!_instanceProvidesCode]]"
-                            style="width:23px; height: 70%; border-left: 1px solid #DDD; margin-left: 22px; "
-                        >
-                        </div>
-
-                        <!-- Deployment menu -->
-                        <paper-dropdown-menu
-                            hidden="[[!_showCode]]"
-                            id="deploymentMenu"
-                            label="Deployment"
-                            style="width:120px; "
-                        >
-                            <paper-listbox
-                                class="dropdown-content"
-                                slot="dropdown-content"
-                                selected="{{_selectedDeploymentIndex}}"
-                            >
-                                <template
-                                    is="dom-repeat"
-                                    items="[[_deployments]]"
-                                    as="deployment"
-                                >
-                                    <paper-item>[[deployment]]</paper-item>
-                                </template>
-                            </paper-listbox>
-                        </paper-dropdown-menu>
-
-                        <!-- Viewport size menu -->
-                        <paper-dropdown-menu
-                            id="viewportSizeMenu"
-                            hidden="true"
-                            label="Viewport Size"
-                            style="width:130px; "
-                        >
-                        <!--<paper-dropdown-menu-->
-                            <!--hidden="[[!_showRendered]]"-->
-                            <!--id="viewportSizeMenu"-->
-                            <!--label="Viewport Size"-->
-                            <!--style="width:130px; "-->
-                        <!--&gt;-->
-                            <paper-listbox
-                                class="dropdown-content"
-                                slot="dropdown-content"
-                                selected="{{_selectedViewportSizeIndex}}"
-                            >
-                                <template
-                                    is="dom-repeat"
-                                    items="[[_viewportSizes]]"
-                                    as="viewportSize"
-                                >
-                                    <paper-item>[[viewportSize.name]]</paper-item>
-                                </template>
-                            </paper-listbox>
-                        </paper-dropdown-menu>
-
-                        <div style="width:10px; min-width:20px; "></div>
-
-                        <!-- Size display -->
-                        <div
-                            id="sizeDisplay"
-                            hidden="true"
-                        >
-                        <!--<div-->
-                            <!--id="sizeDisplay"-->
-                            <!--hidden="[[!_showRendered]]"-->
-                        <!--&gt;-->
-                            ([[_viewportWidth]] x [[_viewportHeight]])
-                        </div>
-
-                        <!-- Spacer -->
-                        <div class="flex" style="min-width:30px; "></div>
-
                     </div>
-                </div>
 
-                <!-- Rendered or code -->
-                <iron-pages
-                    id="renderedOrCode"
-                    class="flex layout vertical"
-                    attr-for-selected="name"
-                    selected="[[_selectedMode]]"
-                >
-
-                    <!-- Rendered -->
-                    <div
-                        id="rendered"
-                        name="rendered"
+                    <!-- Page code -->
+                    <juicy-ace-editor
+                        id="pageCodeEditor"
                         class="flex scroll"
+                        style="border:1px solid #DDD; margin-top: 5px; "
+                        readonly
+                        theme="ace/theme/chrome"
+                        mode="ace/mode/html"
+                        fontsize="14px"
+                        softtabs
+                        value="[[pageCode]]"
+                        tabsize="4"
                     >
+                    </juicy-ace-editor>
 
-                        <!-- Fake viewport -->
-                        <div id="fakeViewport">
+                    <div style="height:12px;"></div>
 
-                            <!-- Instance slot -->
-                            <slot
-                                id="instanceSlot"
-                                name="instance"
-                            >
-                            </slot>
-                        </div>
-                    </div>
-
-                    <!-- Code -->
-                    <div
-                        name="code"
-                        class="flex layout vertical"
-                        style="padding:20px; "
-                    >
-                        <!-- Polyfill code header -->
-                        <div class="layout horizontal center">
-
-                            <!-- Heading -->
-                            <iron-label
-                                style="font-family:Arial; font-size: 14pt; white-space:nowrap; "
-                            >
-                                Web Components Polyfill Loader
-                            </iron-label>
-
-                            <!-- Instructions -->
-                            <iron-label
-                                class="flex"
-                                style="font-family:Arial; font-size: 10pt; margin-left: 16px; "
-                            >
-                                Copy and paste this into your website's index.html file.
-                            </iron-label>
-
-                            <!-- Copy code button -->
-                            <ft-labeled-icon-button
-                                icon="content-paste"
-                                label="Copy"
-                                style="margin-left:16px; "
-                                on-click="_onCopyPolyfillCodeButtonClicked"
-                            >
-                            </ft-labeled-icon-button>
-                        </div>
-
-                        <!-- Polyfill code -->
-                        <juicy-ace-editor
-                            id="polyfillCodeEditor"
-                            style="height:100px; border: 1px solid #DDD; margin-top: 5px; "
-                            readonly
-                            theme="ace/theme/chrome"
-                            mode="ace/mode/html"
-                            fontsize="14px"
-                            softtabs
-                            value="[[polyfillCode]]"
-                            tabsize="4"
-                        >
-                        </juicy-ace-editor>
-
-                        <!-- Page code header -->
-                        <div
-                            class="layout horizontal center"
-                            style="padding-top:10px; "
-                        >
-
-                            <!-- Heading -->
-                            <iron-label
-                                style="font-family:Arial; font-size: 14pt; white-space:nowrap; "
-                            >
-                                Page Code
-                            </iron-label>
-
-                            <!-- Instructions -->
-                            <iron-label
-                                class="flex"
-                                style="font-family:Arial; font-size: 10pt; margin-left: 16px; "
-                            >
-                                Copy and paste this into the appropriate page of your website.
-                            </iron-label>
-
-                            <!-- Copy code button -->
-                            <ft-labeled-icon-button
-                                icon="content-paste"
-                                label="Copy"
-                                style="margin-left:16px; "
-                                on-click="_onCopyPageCodeButtonClicked"
-                            >
-                            </ft-labeled-icon-button>
-                        </div>
-
-                        <!-- Page code -->
-                        <juicy-ace-editor
-                            id="pageCodeEditor"
-                            class="flex scroll"
-                            style="border:1px solid #DDD; margin-top: 5px; "
-                            readonly
-                            theme="ace/theme/chrome"
-                            mode="ace/mode/html"
-                            fontsize="14px"
-                            softtabs
-                            value="[[pageCode]]"
-                            tabsize="4"
-                        >
-                        </juicy-ace-editor>
-
-                        <div style="height:12px;"></div>
-
-                        <!-- Substitute fixture values checkbox -->
-                        <paper-checkbox
-                                checked="{{_substituteFixtureValues}}">
-                            Substitute fixture values into instance code (Warning: Contains secrets)
-                        </paper-checkbox>
-                    </div>
-                </iron-pages>
-            </div>
+                    <!-- Substitute fixture values checkbox -->
+                    <paper-checkbox
+                        checked="{{_substituteFixtureValues}}">
+                        Substitute fixture values into instance code (Warning: Contains secrets)
+                    </paper-checkbox>
+                </div>
+            </iron-pages>
         </div>
 
         <!-- Confirmation dialog -->
@@ -690,10 +658,9 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                     return;
                 var pageCodeTemplate = instance.getPageCodeTemplate(isDropIn);
 
-                var settingsInitializers = this._buildSettingsInitializers();
-                var settingsImports = this._buildSettingsImports();
+                var settingsInitializers = this._buildSettingsElements();
 
-                this.pageCode = this._makeSubstitutionsInto(pageCodeTemplate, settingsImports, settingsInitializers);
+                this.pageCode = this._makeSubstitutionsInto(pageCodeTemplate, settingsInitializers);
 
                 setTimeout(function()
                 {
@@ -703,7 +670,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                 }.bind(this), 1);
             },
 
-            _buildSettingsImports: function()
+            _buildSettingsElements: function()
             {
                 if (!this.configurations)
                     return "";
@@ -719,41 +686,18 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                     var settingsEditor = configuration.settingsEditor;
                     if (!settingsEditor)
                         continue;
-                    code += settingsEditor.generateImports();
+                    code += settingsEditor.generateSettingsElement();
                 }
 
                 return code;
             },
 
-            _buildSettingsInitializers: function()
-            {
-                if (!this.configurations)
-                    return "";
-
-                var code = "";
-                var configurations = this.configurations;
-                var count = configurations.length;
-                for (var index = 0;
-                     index < count;
-                     index++)
-                {
-                    var configuration = configurations[index];
-                    var settingsEditor = configuration.settingsEditor;
-                    if (!settingsEditor)
-                        continue;
-                    code += settingsEditor.generateSettings();
-                }
-
-                return code;
-            },
-
-            _makeSubstitutionsInto: function(template, settingsImports, settingsInitializers)
+            _makeSubstitutionsInto: function(template, settingsInitializers)
             {
                 // TODO: Find a more efficient way to do this
 
                 var code = template;
                 code = code.replace(/{{NAME}}/g, this.name);
-                code = code.replace(/{{SETTINGS_IMPORTS}}/g, settingsImports);
                 if (this._substituteFixtureValues)
                 {
                     code = code.replace(/{{ACCOUNT_ID}}/g, this.accountId);

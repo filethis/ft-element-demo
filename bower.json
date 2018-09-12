@@ -14,6 +14,7 @@
         "ft-scrolling-behavior": "filethis/ft-scrolling-behavior#^1.0.17",
         "ft-styler": "filethis/ft-styler#^1.0.10",
         "ft-url-param-behavior": "filethis/ft-url-param-behavior#^1.0.8",
+        "iron-label": "PolymerElements/iron-label#1 - 2",
         "iron-pages": "PolymerElements/iron-pages#1 - 2",
         "juicy-ace-editor": "^2.0.4",
         "paper-button": "PolymerElements/paper-button#1 - 2",
