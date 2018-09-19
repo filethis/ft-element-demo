@@ -32,6 +32,7 @@ limitations under the License.
 <link rel="import" href="../paper-item/paper-item.html">
 <link rel="import" href="../paper-listbox/paper-listbox.html">
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../app-storage/app-localstorage/app-localstorage-document.html">
 <link rel="import" href="ft-element-demo-header.html">
 
 <!--
@@ -57,7 +58,13 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
             }
         </style>
 
-        <app-localstorage-document key="configPanelIsOpen" data="{{_configPanelIsOpen}}">
+        <app-localstorage-document key="ftElementDemo-configPanelIsOpen" data="{{_configPanelIsOpen}}">
+        </app-localstorage-document>
+
+        <app-localstorage-document key="ftElementDemo-selectedMode" data="{{_selectedMode}}">
+        </app-localstorage-document>
+
+        <app-localstorage-document key="ftElementDemo-selectedDeploymentIndex" data="{{_selectedDeploymentIndex}}">
         </app-localstorage-document>
 
         <ft-element-demo-header
@@ -75,7 +82,6 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                 class="layout vertical"
                 style="border-bottom:1px solid #DDD; "
             >
-
                 <!-- Instance header -->
                 <div
                     id="instanceHeader"
@@ -203,136 +209,148 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                 </div>
             </div>
 
-            <!-- Rendered or code -->
-            <iron-pages
-                id="renderedOrCode"
-                class="flex layout vertical"
-                attr-for-selected="name"
-                selected="[[_selectedMode]]"
+            <!-- Configuration and instance panels -->
+            <div
+                class="flex layout horizontal"
             >
-
-                <!-- Rendered -->
-                <div
-                    id="rendered"
-                    name="rendered"
-                    class="flex scroll"
+                <!-- Config slot -->
+                <slot
+                    id="configSlot"
+                    name="config"
                 >
+                </slot>
 
-                    <!-- Fake viewport -->
-                    <div id="fakeViewport">
-
-                        <!-- Instance slot -->
-                        <slot
-                            id="instanceSlot"
-                            name="instance"
-                        >
-                        </slot>
-                    </div>
-                </div>
-
-                <!-- Code -->
-                <div
-                    name="code"
+                <!-- Rendered or code -->
+                <iron-pages
+                    id="renderedOrCode"
                     class="flex layout vertical"
-                    style="padding:20px; "
+                    attr-for-selected="name"
+                    selected="[[_selectedMode]]"
                 >
-                    <!-- Polyfill code header -->
-                    <div class="layout horizontal center">
 
-                        <!-- Heading -->
-                        <iron-label
-                            style="font-family:Arial; font-size: 14pt; white-space:nowrap; "
-                        >
-                            Web Components Polyfill Loader
-                        </iron-label>
-
-                        <!-- Instructions -->
-                        <iron-label
-                            class="flex"
-                            style="font-family:Arial; font-size: 10pt; margin-left: 16px; "
-                        >
-                            Copy and paste this into your website's index.html file.
-                        </iron-label>
-
-                        <!-- Copy code button -->
-                        <ft-labeled-icon-button
-                            icon="content-paste"
-                            label="Copy"
-                            style="margin-left:16px; "
-                            on-click="_onCopyPolyfillCodeButtonClicked"
-                        >
-                        </ft-labeled-icon-button>
-                    </div>
-
-                    <!-- Polyfill code -->
-                    <juicy-ace-editor
-                        id="polyfillCodeEditor"
-                        style="height:100px; border: 1px solid #DDD; margin-top: 5px; "
-                        readonly
-                        theme="ace/theme/chrome"
-                        mode="ace/mode/html"
-                        fontsize="14px"
-                        softtabs
-                        value="[[polyfillCode]]"
-                        tabsize="4"
-                    >
-                    </juicy-ace-editor>
-
-                    <!-- Page code header -->
+                    <!-- Rendered -->
                     <div
-                        class="layout horizontal center"
-                        style="padding-top:10px; "
+                        id="rendered"
+                        name="rendered"
+                        class="flex scroll"
                     >
+                        <!-- Fake viewport -->
+                        <div id="fakeViewport">
 
-                        <!-- Heading -->
-                        <iron-label
-                            style="font-family:Arial; font-size: 14pt; white-space:nowrap; "
-                        >
-                            Page Code
-                        </iron-label>
-
-                        <!-- Instructions -->
-                        <iron-label
-                            class="flex"
-                            style="font-family:Arial; font-size: 10pt; margin-left: 16px; "
-                        >
-                            Copy and paste this into the appropriate page of your website.
-                        </iron-label>
-
-                        <!-- Copy code button -->
-                        <ft-labeled-icon-button
-                            icon="content-paste"
-                            label="Copy"
-                            style="margin-left:16px; "
-                            on-click="_onCopyPageCodeButtonClicked"
-                        >
-                        </ft-labeled-icon-button>
+                            <!-- Instance slot -->
+                            <slot
+                                id="instanceSlot"
+                                name="instance"
+                            >
+                            </slot>
+                        </div>
                     </div>
 
-                    <!-- Page code -->
-                    <juicy-ace-editor
-                        id="pageCodeEditor"
-                        class="flex scroll"
-                        style="border:1px solid #DDD; margin-top: 5px; "
-                        readonly
-                        theme="ace/theme/chrome"
-                        mode="ace/mode/html"
-                        fontsize="14px"
-                        softtabs
-                        value="[[pageCode]]"
-                        tabsize="4"
+                    <!-- Code -->
+                    <div
+                        name="code"
+                        class="flex layout vertical"
+                        style="padding:20px; "
                     >
-                    </juicy-ace-editor>
+                        <!-- Polyfill code header -->
+                        <div class="layout horizontal center">
 
-                    <div style="height:12px;"></div>
+                            <!-- Heading -->
+                            <iron-label
+                                style="font-family:Arial; font-size: 14pt; white-space:nowrap; "
+                            >
+                                Web Components Polyfill Loader
+                            </iron-label>
 
-                    <!-- Substitute fixture values checkbox -->
-                    <paper-checkbox
-                        checked="{{_substituteFixtureValues}}">
-                        Substitute fixture values into instance code (Warning: Contains secrets)
-                    </paper-checkbox>
-                </div>
-            </iron-pages>
+                            <!-- Instructions -->
+                            <iron-label
+                                class="flex"
+                                style="font-family:Arial; font-size: 10pt; margin-left: 16px; "
+                            >
+                                Copy and paste this into your website's index.html file.
+                            </iron-label>
+
+                            <!-- Copy code button -->
+                            <ft-labeled-icon-button
+                                icon="content-paste"
+                                label="Copy"
+                                style="margin-left:16px; "
+                                on-click="_onCopyPolyfillCodeButtonClicked"
+                            >
+                            </ft-labeled-icon-button>
+                        </div>
+
+                        <!-- Polyfill code -->
+                        <juicy-ace-editor
+                            id="polyfillCodeEditor"
+                            style="height:100px; border: 1px solid #DDD; margin-top: 5px; "
+                            readonly
+                            theme="ace/theme/chrome"
+                            mode="ace/mode/html"
+                            fontsize="14px"
+                            softtabs
+                            value="[[polyfillCode]]"
+                            tabsize="4"
+                        >
+                        </juicy-ace-editor>
+
+                        <!-- Page code header -->
+                        <div
+                            class="layout horizontal center"
+                            style="padding-top:10px; "
+                        >
+
+                            <!-- Heading -->
+                            <iron-label
+                                style="font-family:Arial; font-size: 14pt; white-space:nowrap; "
+                            >
+                                Page Code
+                            </iron-label>
+
+                            <!-- Instructions -->
+                            <iron-label
+                                class="flex"
+                                style="font-family:Arial; font-size: 10pt; margin-left: 16px; "
+                            >
+                                Copy and paste this into the appropriate page of your website.
+                            </iron-label>
+
+                            <!-- Copy code button -->
+                            <ft-labeled-icon-button
+                                icon="content-paste"
+                                label="Copy"
+                                style="margin-left:16px; "
+                                on-click="_onCopyPageCodeButtonClicked"
+                            >
+                            </ft-labeled-icon-button>
+                        </div>
+
+                        <!-- Page code -->
+                        <juicy-ace-editor
+                            id="pageCodeEditor"
+                            class="flex scroll"
+                            style="border:1px solid #DDD; margin-top: 5px; "
+                            readonly
+                            theme="ace/theme/chrome"
+                            mode="ace/mode/html"
+                            fontsize="14px"
+                            softtabs
+                            value="[[pageCode]]"
+                            tabsize="4"
+                        >
+                        </juicy-ace-editor>
+
+                        <div style="height:12px;"></div>
+
+                        <!-- Substitute fixture values checkbox -->
+                        <paper-checkbox
+                            checked="{{_substituteFixtureValues}}">
+                            Substitute fixture values into instance code (Warning: Contains secrets)
+                        </paper-checkbox>
+                    </div>
+                </iron-pages>
+            </div>
+
         </div>
 
         <!-- Confirmation dialog -->
