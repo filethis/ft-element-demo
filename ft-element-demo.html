@@ -18,6 +18,7 @@ limitations under the License.
 <link rel="import" href="../app-storage/app-localstorage/app-localstorage-document.html">
 <link rel="import" href="../ft-clipboard-behavior/ft-clipboard-behavior.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../iron-meta/iron-meta.html">
 <link rel="import" href="../iron-pages/iron-pages.html">
 <link rel="import" href="../juicy-ace-editor/juicy-ace-editor.html">
 <link rel="import" href="../ft-accordion-item/ft-accordion-item.html">
@@ -390,10 +391,10 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                     value: "ft-thing"
                 },
 
-                version: {
+                latestDropinVersion: {
                     type: String,
                     notify: true,
-                    value: "latest"
+                    value: "2.0.0"
                 },
 
                 showHeader: {
@@ -720,6 +721,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
             {
                 var code = template;
                 code = code.replace(/{{NAME}}/g, this.name);
+                code = code.replace(/{{LATEST_DROPIN_VERSION}}/g, this.latestDropinVersion);
                 if (this._substituteFixtureValues)
                 {
                     code = code.replace(/{{ACCOUNT_ID}}/g, this.accountId);
