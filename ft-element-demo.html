@@ -35,6 +35,7 @@ limitations under the License.
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../app-storage/app-localstorage/app-localstorage-document.html">
 <link rel="import" href="ft-element-demo-header.html">
+<link rel="import" href="ft-simple-http-servers-window.html">
 
 <!--
 `<ft-element-demo>`
@@ -134,15 +135,26 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                     </ft-labeled-icon-button>
 
                     <!-- Divider -->
+                    <!--<div-->
+                        <!--hidden="[[!_instanceProvidesCode]]"-->
+                        <!--style="width:23px; height: 70%; border-left: 1px solid #DDD; margin-left: 22px; "-->
+                    <!--&gt;-->
+                    <!--</div>-->
                     <div
-                        hidden="[[!_instanceProvidesCode]]"
+                        hidden="true"
                         style="width:23px; height: 70%; border-left: 1px solid #DDD; margin-left: 22px; "
                     >
                     </div>
 
                     <!-- Deployment menu -->
+                    <!--<paper-dropdown-menu-->
+                        <!--hidden="[[!_showCode]]"-->
+                        <!--id="deploymentMenu"-->
+                        <!--label="Deployment"-->
+                        <!--style="width:120px; "-->
+                    <!--&gt;-->
                     <paper-dropdown-menu
-                        hidden="[[!_showCode]]"
+                        hidden="true"
                         id="deploymentMenu"
                         label="Deployment"
                         style="width:120px; "
@@ -228,7 +240,6 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                     attr-for-selected="name"
                     selected="[[_selectedMode]]"
                 >
-
                     <!-- Rendered -->
                     <div
                         id="rendered"
@@ -251,14 +262,12 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                     <div
                         name="code"
                         class="flex layout vertical"
-                        style="padding:20px; "
+                        style="padding:8px 20px 20px 20px; "
                     >
                         <!-- Page code header -->
                         <div
                             class="layout horizontal center"
-                            style="padding-top:10px; "
                         >
-
                             <!-- Heading -->
                             <iron-label
                                 style="font-family:Arial; font-size: 14pt; white-space:nowrap; "
@@ -266,13 +275,16 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                                 Page Code
                             </iron-label>
 
-                            <!-- Instructions -->
-                            <iron-label
-                                class="flex"
-                                style="font-family:Arial; font-size: 10pt; margin-left: 16px; "
+                            <div class="flex"></div>
+
+                            <!-- Test button -->
+                            <ft-labeled-icon-button
+                                icon="http"
+                                label="Test"
+                                style="margin-left:16px; "
+                                on-click="_onTestButtonClicked"
                             >
-                                Copy and paste this into the appropriate page of your website.
-                            </iron-label>
+                            </ft-labeled-icon-button>
 
                             <!-- Copy code button -->
                             <ft-labeled-icon-button
@@ -314,6 +326,12 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
 
         <!-- Confirmation dialog -->
         <ft-confirmation-dialog id="confirmationDialog"></ft-confirmation-dialog>
+
+        <!-- Serve window -->
+        <ft-simple-http-servers-window
+            id="serversWindow"
+        >
+        </ft-simple-http-servers-window>
 
     </template>
 
@@ -607,7 +625,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                 var hasSettings = !!settings;
 
                 // TODO:
-                var styling = "";
+                var styling = "                    // None\n";
                 var hasStyling = !!styling;
 
                 var pageCodeTemplate = instance.getPageCodeTemplate(isDropIn, hasStyling, hasSettings);
@@ -688,6 +706,13 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
             _onCopyPageCodeButtonClicked: function(event, detail)
             {
                 this.copyTextToClipboard(this.pageCode);
+            },
+
+            _onTestButtonClicked: function(event, detail)
+            {
+                return this.$.serversWindow.pose().then(function()
+                {
+                }.bind(this))
             },
 
             _onPageCodeChanged:function()
