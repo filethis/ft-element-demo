@@ -280,7 +280,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                             <!-- Test button -->
                             <ft-labeled-icon-button
                                 icon="http"
-                                label="Test"
+                                label="Testing"
                                 style="margin-left:16px; "
                                 on-click="_onTestButtonClicked"
                             >
@@ -704,6 +704,35 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
             },
 
             _onCopyPageCodeButtonClicked: function(event, detail)
+            {
+                if (this._substituteFixtureValues)
+                {
+                    this._copyPageCode();
+                    return;
+                }
+
+                var overrideWarning = event.metaKey;
+                if (overrideWarning)
+                {
+                    this._copyPageCode();
+                    return;
+                }
+
+                var prompt =
+                    "You have not substituted the account ID and user access token values from the fixture into the page code. " +
+                    "Are you sure you want to copy the code without them?<br><br>" +
+                    "You can click the checkbox at the bottom of the main page to make the substitutions, " +
+                    "or you can leave the double-curly-bracket-delimited substitution parameters in place.";
+                return this.$.confirmationDialog.confirm(prompt, "Copy")
+                    .then(function(choice)
+                    {
+                        if (choice === "cancel")
+                            return;
+                        this._copyPageCode();
+                    }.bind(this))
+            },
+
+            _copyPageCode: function()
             {
                 this.copyTextToClipboard(this.pageCode);
             },

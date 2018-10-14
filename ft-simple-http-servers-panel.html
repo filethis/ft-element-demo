@@ -113,24 +113,6 @@ limitations under the License.
             >
             </paper-input>
 
-            <!-- Platform Menu -->
-            <paper-dropdown-menu
-                label="Dev Platform"
-                style="margin-left: 25px; width:120px; "
-                hidden="[[!_installIsPlatformSpecific]]"
-            >
-                <paper-listbox
-                    class="dropdown-content"
-                    slot="dropdown-content"
-                    attr-for-selected="name"
-                    selected="{{_selectedPlatformName}}"
-                >
-                    <template is="dom-repeat" items="[[_platforms]]" as="platform">
-                        <paper-item name="[[platform.name]]">[[platform.label]]</paper-item>
-                    </template>
-                </paper-listbox>
-            </paper-dropdown-menu>
-
         </div>
 
         <!-- Install -->
@@ -259,9 +241,6 @@ limitations under the License.
         <app-localstorage-document key="ftSimpleHttpServersPanel-port" data="{{_port}}">
         </app-localstorage-document>
 
-        <app-localstorage-document key="ftSimpleHttpServersPanel-selectedPlatformName" data="{{_selectedPlatformName}}">
-        </app-localstorage-document>
-
     </template>
 
     <script>
@@ -275,7 +254,7 @@ limitations under the License.
 
             observers:
                 [
-                    "_onSettingsChanged(_selectedServer, _port, _selectedPlatform)",
+                    "_onSettingsChanged(_selectedServer, _port)",
                 ],
 
             properties: {
@@ -296,91 +275,76 @@ limitations under the License.
                         type: Array,
                         value: [
                             {
-                                name: 'browser-sync',
                                 label: 'BrowserSync',
+                                name: 'browser-sync',
                                 install: "npm install -g browser-sync",
                                 codeTemplate: "browser-sync start --server --port {{PORT}}",
-                                installIsPlatformSpecific: false
                             },
                             {
-                                name: 'php',
-                                label: 'PHP',
-                                install: "",
-                                codeTemplate: "php -S localhost:{{PORT}}",
-                                installIsPlatformSpecific: false
+                                label: 'Node http-server',
+                                name: 'static-http-server',
+                                install: "npm install -g http-server",
+                                codeTemplate: "http-server -p {{PORT}}",
                             },
                             {
-                                name: 'python2',
-                                label: 'Python 2.x SimpleHTTPServer',
-                                install: "",
-                                codeTemplate: "python -m SimpleHTTPServer {{PORT}}",
-                                installIsPlatformSpecific: false
-                            },
-                            {
-                                name: 'python3',
-                                label: 'Python 3.x http.server',
-                                install: "",
-                                codeTemplate: "python -m http.server {{PORT}}",
-                                installIsPlatformSpecific: false
-                            },
-                            {
-                                name: 'ruby-adsf',
-                                label: 'Ruby adsf',
-                                install: "gem install adsf",
-                                codeTemplate: "adsf --port {{PORT}}",
-                                installIsPlatformSpecific: false
-                            },
-                            {
-                                name: 'ruby-httpd',
-                                label: 'Ruby httpd',
-                                install: "",
-                                codeTemplate: "ruby -run -ehttpd . --port {{PORT}}",
-                                installIsPlatformSpecific: false
-                            },
-                            {
-                                name: 'ruby-webrick',
-                                label: 'Ruby WEBrick',
-                                install: "",
-                                codeTemplate: "ruby -rwebrick -e'WEBrick::HTTPServer.new(:Port => {{PORT}}, :DocumentRoot => Dir.pwd).start'",
-                                installIsPlatformSpecific: false
-                            },
-                            {
-                                name: 'static-server',
                                 label: 'Node static-server',
+                                name: 'static-server',
                                 install: "npm install -g static-server",
                                 codeTemplate: "static-server --port {{PORT}}",
-                                installIsPlatformSpecific: false
-                            },
-                        ]
-                    },
-
-                // Platform
-
-                _selectedPlatformName: {
-                    type: String,
-                    value: "mac",
-                    observer: "_selectedPlatformNameChanged",
-                },
-
-                _selectedPlatform: {
-                    type: Object,
-                },
-
-                _platforms:
-                    {
-                        type: Array,
-                        value: [
-                            {
-                                name:'linux',
-                                label:'Linux',
                             },
                             {
-                                name:'mac',
-                                label:'Mac',
+                                label: 'Perl HTTP::Server::Brick',
+                                name: 'perl-brick',
+                                install: "cpan HTTP::Server::Brick",
+                                codeTemplate: "perl -MHTTP::Server::Brick -e '$s=HTTP::Server::Brick->new(port=>{{PORT}}); $s->mount(\"/\"=>{path=>\".\"}); $s->start'",
                             },
                             {
-                                name:'windows',
-                                label:'Windows',
+                                label: 'Perl Plack',
+                                name: 'perl-plack',
+                                install: "cpan Plack",
+                                codeTemplate: "plackup -MPlack::App::Directory -e 'Plack::App::Directory->new(root=>\".\");' -p {{PORT}}",
+                            },
+                            {
+                                label: 'PHP',
+                                name: 'php',
+                                install: "",
+                                codeTemplate: "php -S localhost:{{PORT}}",
+                            },
+                            {
+                                label: 'Python 2.x SimpleHTTPServer',
+                                name: 'python2',
+                                install: "",
+                                codeTemplate: "python -m SimpleHTTPServer {{PORT}}",
+                            },
+                            {
+                                label: 'Python 3.x http.server',
+                                name: 'python3',
+                                install: "",
+                                codeTemplate: "python -m http.server {{PORT}}",
+                            },
+                            {
+                                label: 'Ruby adsf',
+                                name: 'ruby-adsf',
+                                install: "gem install adsf",
+                                codeTemplate: "adsf --port {{PORT}}",
+                            },
+                            {
+                                label: 'Ruby httpd',
+                                name: 'ruby-httpd',
+                                install: "",
+                                codeTemplate: "ruby -run -ehttpd . --port {{PORT}}",
+                            },
+                            {
+                                label: 'Ruby Sinatra',
+                                name: 'ruby-sinatra',
+                                install: "gem install sinatra",
+                                codeTemplate: "ruby -rsinatra -e'set :public_folder, \".\"; set :port, {{PORT}}'",
+                            },
+                            {
+                                label: 'Ruby WEBrick',
+                                name: 'ruby-webrick',
+                                install: "",
+                                codeTemplate: "ruby -rwebrick -e'WEBrick::HTTPServer.new(:Port => {{PORT}}, :DocumentRoot => Dir.pwd).start'",
                             },
                         ]
                     },
@@ -403,11 +367,6 @@ limitations under the License.
                 },
 
                 _hasInstall: {
-                    type: Boolean,
-                    value: false,
-                },
-
-                _installIsPlatformSpecific: {
                     type: Boolean,
                     value: false,
                 },
@@ -456,8 +415,7 @@ limitations under the License.
 
                 this._install = this._selectedServer.install;
                 this._hasInstall = (!!this._install);
-                this._installIsPlatformSpecific = this._selectedServer.installIsPlatformSpecific;
-                this._url = "http://localhost:" + port;
+                this._url = "http://localhost:" + port + "/index.html";
             },
 
             _findServerNamed: function(name)
@@ -469,24 +427,6 @@ limitations under the License.
                     var server = servers[index];
                     if (server.name === name)
                         return server;
-                }
-                return null;
-            },
-
-            _selectedPlatformNameChanged: function(to, from)
-            {
-                this._selectedPlatorm = this._findPlatformNamed(this._selectedPlatformName);
-            },
-
-            _findPlatformNamed: function(name)
-            {
-                var platforms = this._platforms;
-                var count = platforms.length;
-                for (var index = 0; index < count; index++)
-                {
-                    var platform = platforms[index];
-                    if (platform.name === name)
-                        return platform;
                 }
                 return null;
             },
