@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
+<link rel="import" href="../ft-element-demo/ft-simple-http-servers-panel.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="../paper-dialog/paper-dialog.html">
@@ -21,7 +22,6 @@ limitations under the License.
 <link rel="import" href="../paper-item/paper-item.html">
 <link rel="import" href="../paper-listbox/paper-listbox.html">
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="ft-simple-http-servers-panel.html">
 
 
 <!--
@@ -46,19 +46,19 @@ limitations under the License.
         <paper-dialog
             modal id="dialog"
             class="layout vertical"
-            style="width: 700px; height: 600px; ">
-
+            style="width: 700px; "
+        >
             <ft-simple-http-servers-panel
                 id="serversPanel"
-                class="flex"
             >
             </ft-simple-http-servers-panel>
 
             <!-- Buttons -->
             <div
                 id="buttons"
-                class="layout horizontal end-justified">
-
+                class="layout horizontal end-justified"
+                style="padding-top: 7px; "
+            >
                 <div id="cancelButtonSpacer" style="width:20px"></div>
 
                 <!-- Done -->

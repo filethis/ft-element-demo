@@ -16,26 +16,25 @@ limitations under the License.
 
 
 <link rel="import" href="../app-storage/app-localstorage/app-localstorage-document.html">
+<link rel="import" href="../ft-accordion-item/ft-accordion-item.html">
+<link rel="import" href="../ft-accordion-item/ft-accordion-item.html">
 <link rel="import" href="../ft-clipboard-behavior/ft-clipboard-behavior.html">
-<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="../iron-meta/iron-meta.html">
-<link rel="import" href="../iron-pages/iron-pages.html">
-<link rel="import" href="../juicy-ace-editor/juicy-ace-editor.html">
-<link rel="import" href="../ft-accordion-item/ft-accordion-item.html">
-<link rel="import" href="../ft-accordion-item/ft-accordion-item.html">
 <link rel="import" href="../ft-confirmation-dialog/ft-confirmation-dialog.html">
+<link rel="import" href="../ft-element-demo/ft-element-demo-header.html">
+<link rel="import" href="../ft-element-demo/ft-simple-http-servers-window.html">
 <link rel="import" href="../ft-error-behavior/ft-error-behavior.html">
 <link rel="import" href="../ft-http-behavior/ft-http-behavior.html">
 <link rel="import" href="../ft-labeled-icon-button/ft-labeled-icon-button.html">
 <link rel="import" href="../ft-styler/ft-styler.html">
 <link rel="import" href="../ft-url-param-behavior/ft-url-param-behavior.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../iron-meta/iron-meta.html">
+<link rel="import" href="../iron-pages/iron-pages.html">
+<link rel="import" href="../juicy-ace-editor/juicy-ace-editor.html">
 <link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../paper-item/paper-item.html">
 <link rel="import" href="../paper-listbox/paper-listbox.html">
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../app-storage/app-localstorage/app-localstorage-document.html">
-<link rel="import" href="ft-element-demo-header.html">
-<link rel="import" href="ft-simple-http-servers-window.html">
 
 <!--
 `<ft-element-demo>`
@@ -288,7 +287,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
 
                             <!-- Copy code button -->
                             <ft-labeled-icon-button
-                                icon="content-paste"
+                                icon="content-copy"
                                 label="Copy"
                                 style="margin-left:16px; "
                                 on-click="_onCopyPageCodeButtonClicked"
@@ -625,7 +624,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                 var hasSettings = !!settings;
 
                 // TODO:
-                var styling = "                    // None\n";
+                var styling = "                    /* None*/\n";
                 var hasStyling = !!styling;
 
                 var pageCodeTemplate = instance.getPageCodeTemplate(isDropIn, hasStyling, hasSettings);

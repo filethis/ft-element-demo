@@ -59,11 +59,6 @@ limitations under the License.
                 font-family:Arial;
                 font-size: 12pt;
             }
-
-            .section-content
-            {
-                margin-top: 10px;
-            }
         </style>
 
         <!-- Instructions -->
@@ -82,7 +77,8 @@ limitations under the License.
 
         <!-- Server and port number fields -->
         <div
-            class="layout horizontal section-content"
+            class="layout horizontal"
+            style="margin-top: 10px; "
         >
             <!-- Server Menu -->
             <paper-dropdown-menu
@@ -126,7 +122,8 @@ limitations under the License.
             </iron-label>
 
             <div
-                class="layout horizontal center section-content"
+                class="layout horizontal center"
+                style="margin-top: 10px; "
             >
                 <!-- Install -->
                 <juicy-ace-editor
@@ -146,7 +143,7 @@ limitations under the License.
                 <!-- Copy install button -->
                 <ft-labeled-icon-button
                     id="copyInstallButton"
-                    icon="content-paste"
+                    icon="content-copy"
                     label="Copy"
                     style="margin-left: 15px; "
                     on-click="_onCopyInstallButtonClicked"
@@ -165,7 +162,8 @@ limitations under the License.
             </iron-label>
 
             <div
-                class="layout horizontal center section-content"
+                class="layout horizontal center"
+                style="margin-top: 10px; "
             >
                 <!-- Code -->
                 <juicy-ace-editor
@@ -185,7 +183,7 @@ limitations under the License.
                 <!-- Copy code button -->
                 <ft-labeled-icon-button
                     id="copyCodeButton"
-                    icon="content-paste"
+                    icon="content-copy"
                     label="Copy"
                     style="margin-left: 15px; "
                     on-click="_onCopyCodeButtonClicked"
@@ -204,24 +202,16 @@ limitations under the License.
             </iron-label>
 
             <div
-                class="layout horizontal center section-content"
+                class="layout horizontal center"
+                style="margin-top: 3px; "
             >
                 <!-- URL -->
                 <div
+                    class="flex"
                     style="padding: 5px 10px 5px 10px ; border: 1px solid #DDD; "
                 >
                     [[_url]]
                 </div>
-
-                <!-- Copy URL button -->
-                <ft-labeled-icon-button
-                    id="copyUrlButton"
-                    icon="content-paste"
-                    label="Copy"
-                    style="margin-left: 15px; "
-                    on-click="_onCopyUrlButtonClicked"
-                >
-                </ft-labeled-icon-button>
 
                 <!-- Open URL button -->
                 <ft-labeled-icon-button
@@ -230,6 +220,16 @@ limitations under the License.
                     label="Open"
                     style="margin-left: 15px; "
                     on-click="_onOpenUrlButtonClicked"
+                >
+                </ft-labeled-icon-button>
+
+                <!-- Copy URL button -->
+                <ft-labeled-icon-button
+                    id="copyUrlButton"
+                    icon="content-copy"
+                    label="Copy"
+                    style="margin-left: 15px; "
+                    on-click="_onCopyUrlButtonClicked"
                 >
                 </ft-labeled-icon-button>
             </div>
