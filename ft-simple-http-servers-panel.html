@@ -65,50 +65,50 @@ limitations under the License.
         <iron-label
             style="font-family:Arial; font-size: 12pt; "
         >
-            You can serve the HTML file from "localhost" domain running a simple HTTP server in a terminal
+            You can test the page code on your development machine. After copying and saving it to an "index.html" file, you can use one of the following command-line tools to serve it.
         </iron-label>
 
-        <!-- Configure -->
-
-        <!-- Section Label -->
-        <iron-label class="section-label">
-            Configure
-        </iron-label>
-
-        <!-- Server and port number fields -->
+        <!-- Choose -->
         <div
-            class="layout horizontal"
-            style="margin-top: 10px; "
+            class="layout vertical section"
         >
-            <!-- Server Menu -->
-            <paper-dropdown-menu
-                label="Server"
-                style="width:250px; "
+            <!-- Label -->
+            <iron-label class="section-label">
+                Choose Server
+            </iron-label>
+
+            <div
+                class="layout horizontal center"
             >
-                <paper-listbox
-                    class="dropdown-content"
-                    slot="dropdown-content"
-                    attr-for-selected="name"
-                    selected="{{_selectedServerName}}"
+                <!-- Server Menu -->
+                <paper-dropdown-menu
+                    label="Server"
+                    style="width:250px; "
                 >
-                    <template is="dom-repeat" items="[[_servers]]" as="server">
-                        <paper-item name="[[server.name]]">[[server.label]]</paper-item>
-                    </template>
-                </paper-listbox>
-            </paper-dropdown-menu>
+                    <paper-listbox
+                        class="dropdown-content"
+                        slot="dropdown-content"
+                        attr-for-selected="name"
+                        selected="{{_selectedServerName}}"
+                    >
+                        <template is="dom-repeat" items="[[_servers]]" as="server">
+                            <paper-item name="[[server.name]]">[[server.label]]</paper-item>
+                        </template>
+                    </paper-listbox>
+                </paper-dropdown-menu>
 
-            <!-- Port number field -->
-            <paper-input
-                id="portField"
-                value="{{_port}}"
-                label="Port"
-                style="margin-left: 25px; width: 110px; "
-                auto-validate
-                pattern="[0-9]+"
-                error-message="Must be an integer"
-            >
-            </paper-input>
-
+                <!-- Port number field -->
+                <paper-input
+                    id="portField"
+                    value="{{_port}}"
+                    label="Port"
+                    style="margin-left: 25px; width: 110px; "
+                    auto-validate
+                    pattern="[0-9]+"
+                    error-message="Must be an integer"
+                >
+                </paper-input>
+            </div>
         </div>
 
         <!-- Install -->
@@ -375,6 +375,15 @@ limitations under the License.
                     type: String,
                     value: "",
                 },
+            },
+
+            ready: function()
+            {
+                setTimeout(function()
+                {
+                    if (!this._selectedServerName)
+                        this._selectedServerName = "browser-sync";
+                }.bind(this), 1000);
             },
 
             _onCodeChanged:function(to, from)
