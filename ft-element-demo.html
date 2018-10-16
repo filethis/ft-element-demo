@@ -369,7 +369,13 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                 latestDropinVersion: {
                     type: String,
                     notify: true,
-                    value: "1.0.26"
+                    value: "2.0.1"
+                },
+
+                latestReleaseVersion: {
+                    type: String,
+                    notify: true,
+                    value: "2.0.0"
                 },
 
                 showHeader: {
@@ -620,16 +626,19 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                 if (!hasTemplateFunction)
                     return;
 
-                var settings = this._buildSettingsElements();
-                var hasSettings = !!settings;
+                var settingsImports = this._buildSettingsImports();
+                var hasSettingsImports = !!settingsImports;
+
+                var settingsElements = this._buildSettingsElements();
+                var hasSettingsElements = !!settingsElements;
 
                 // TODO:
                 var styling = "                    /* None*/\n";
                 var hasStyling = !!styling;
 
-                var pageCodeTemplate = instance.getPageCodeTemplate(isDropIn, hasStyling, hasSettings);
+                var pageCodeTemplate = instance.getPageCodeTemplate(isDropIn, hasStyling, hasSettingsImports, hasSettingsElements);
 
-                this.pageCode = this._makeSubstitutionsInto(pageCodeTemplate, styling, settings);
+                this.pageCode = this._makeSubstitutionsInto(pageCodeTemplate, styling, settingsImports, settingsElements);
 
                 setTimeout(function()
                 {
@@ -637,6 +646,32 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                     if (editor !== undefined)
                         editor.selection.selectFileStart();
                 }.bind(this), 1);
+            },
+
+            _buildSettingsImports: function()
+            {
+                if (!this.configurations)
+                    return "";
+
+                var settingsImports = "";
+                var configurations = this.configurations;
+                var count = configurations.length;
+                var indent = "    ";
+                for (var index = 0;
+                     index < count;
+                     index++)
+                {
+                    var configuration = configurations[index];
+                    var settingsEditor = configuration.settingsEditor;
+                    if (!settingsEditor)
+                        continue;
+                    var settingsImport = settingsEditor.generateSettingsImport(indent);
+                    if (settingsImport)
+                        settingsImports += settingsImport;
+                }
+                settingsImports += indent + "\n";
+
+                return settingsImports;
             },
 
             _buildSettingsElements: function()
@@ -666,7 +701,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                 return settingsElements;
             },
 
-            _makeSubstitutionsInto: function(template, styling, settings)
+            _makeSubstitutionsInto: function(template, styling, settingsImports, settingsElements)
             {
                 var code = template;
                 code = code.replace(/{{NAME}}/g, this.name);
@@ -676,10 +711,14 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                     code = code.replace(/{{ACCOUNT_ID}}/g, this.accountId);
                     code = code.replace(/{{TOKEN}}/g, this.token);
                 }
-                code = code.replace(/{{SETTINGS}}/g, settings);
-                if (settings)
+                code = code.replace(/{{SETTINGS_IMPORTS}}/g, settingsImports);
+                if (settingsImports)
+                    code += "\n";
+                code = code.replace(/{{SETTINGS_ELEMENTS}}/g, settingsElements);
+                if (settingsElements)
                     code += "\n";
                 code = code.replace(/{{STYLING}}/g, styling);
+                code = code.replace(/{{RELEASE_VERSION}}/g, this.latestReleaseVersion);
                 if (styling)
                     code += "\n";
                 return code;
