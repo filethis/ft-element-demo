@@ -309,14 +309,6 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                             tabsize="4"
                         >
                         </juicy-ace-editor>
-
-                        <div style="height:12px;"></div>
-
-                        <!-- Substitute fixture values checkbox -->
-                        <paper-checkbox
-                            checked="{{_substituteFixtureValues}}">
-                            Substitute fixture values into instance code (Warning: Contains secrets)
-                        </paper-checkbox>
                     </div>
                 </iron-pages>
             </div>
@@ -355,7 +347,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
 
             observers:
             [
-                "_onCodeDependencyChanged(accountId, token, _substituteFixtureValues, _selectedDeploymentIndex)"
+                "_onCodeDependencyChanged(accountId, token, _selectedDeploymentIndex)"
             ],
 
             properties: {
@@ -375,7 +367,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                 latestReleaseVersion: {
                     type: String,
                     notify: true,
-                    value: "2.0.0"
+                    value: "2.0.3"
                 },
 
                 showHeader: {
@@ -528,11 +520,6 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                         value: 0,
                         observer: "_onSelectedDeploymentIndexChanged"
                     },
-
-                _substituteFixtureValues: {
-                    type: Boolean,
-                    value: false
-                },
 
                 _showCode: {
                     type: Boolean
@@ -706,11 +693,8 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                 var code = template;
                 code = code.replace(/{{NAME}}/g, this.name);
                 code = code.replace(/{{LATEST_DROPIN_VERSION}}/g, this.latestDropinVersion);
-                if (this._substituteFixtureValues)
-                {
-                    code = code.replace(/{{ACCOUNT_ID}}/g, this.accountId);
-                    code = code.replace(/{{TOKEN}}/g, this.token);
-                }
+                code = code.replace(/{{ACCOUNT_ID}}/g, this.accountId);
+                code = code.replace(/{{TOKEN}}/g, this.token);
                 code = code.replace(/{{SETTINGS_IMPORTS}}/g, settingsImports);
                 if (settingsImports)
                     code += "\n";
@@ -743,31 +727,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
 
             _onCopyPageCodeButtonClicked: function(event, detail)
             {
-                if (this._substituteFixtureValues)
-                {
-                    this._copyPageCode();
-                    return;
-                }
-
-                var overrideWarning = event.metaKey;
-                if (overrideWarning)
-                {
-                    this._copyPageCode();
-                    return;
-                }
-
-                var prompt =
-                    "You have not substituted the account ID and user access token values from the fixture into the page code. " +
-                    "Are you sure you want to copy the code without them?<br><br>" +
-                    "You can click the checkbox at the bottom of the main page to make the substitutions, " +
-                    "or you can leave the double-curly-bracket-delimited substitution parameters in place.";
-                return this.$.confirmationDialog.confirm(prompt, "Copy")
-                    .then(function(choice)
-                    {
-                        if (choice === "cancel")
-                            return;
-                        this._copyPageCode();
-                    }.bind(this))
+                this._copyPageCode();
             },
 
             _copyPageCode: function()
