@@ -371,7 +371,7 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
                 latestReleaseVersion: {
                     type: String,
                     notify: true,
-                    value: "2.0.4"
+                    value: "2.0.6"
                 },
 
                 showHeader: {
@@ -641,28 +641,31 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
 
             _buildSettingsImports: function()
             {
-                if (!this.configurations)
-                    return "";
+                // NOTE: For now, everything is included in the ft-connect-wizard import
+                return "\n";
 
-                var settingsImports = "";
-                var configurations = this.configurations;
-                var count = configurations.length;
-                var indent = "    ";
-                for (var index = 0;
-                     index < count;
-                     index++)
-                {
-                    var configuration = configurations[index];
-                    var settingsEditor = configuration.settingsEditor;
-                    if (!settingsEditor)
-                        continue;
-                    var settingsImport = settingsEditor.generateSettingsImport(indent);
-                    if (settingsImport)
-                        settingsImports += settingsImport;
-                }
-                settingsImports += indent + "\n";
-
-                return settingsImports;
+                // if (!this.configurations)
+                //     return "";
+                //
+                // var settingsImports = "";
+                // var configurations = this.configurations;
+                // var count = configurations.length;
+                // var indent = "    ";
+                // for (var index = 0;
+                //      index < count;
+                //      index++)
+                // {
+                //     var configuration = configurations[index];
+                //     var settingsEditor = configuration.settingsEditor;
+                //     if (!settingsEditor)
+                //         continue;
+                //     var settingsImport = settingsEditor.generateSettingsImport(indent);
+                //     if (settingsImport)
+                //         settingsImports += settingsImport;
+                // }
+                // settingsImports += indent + "\n";
+                //
+                // return settingsImports;
             },
 
             _buildSettingsElements: function()
