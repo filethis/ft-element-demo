@@ -1,4 +1,4 @@
-<!--
+/*
 Copyright 2018 FileThis, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,29 +12,32 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
--->
-
-
-<!-- ft-element-demo element demo -->
-
-<!-- Imports -->
-<link rel="import" href="../../ft-element-demo/ft-element-demo.html">
-<link rel="import" href="../../iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="../../paper-checkbox/paper-checkbox.html">
-<link rel="import" href="../../polymer/polymer.html">
-<link rel="import" href="../ft-element-demo.html">
-
-
-<!--
+*/
+/* ft-element-demo element demo */
+/* Imports */
+/**
 
 An element that can be used for the demo fixture for FileThis elements. Has a slot for the element to be demoed and a side bar for configuration options.
 
 @demo
- -->
-<dom-module id="demo-fixture">
+ */
+/*
+  FIXME(polymer-modulizer): the above comments were extracted
+  from HTML and may be out of place here. Review them and
+  then delete this comment!
+*/
+import '../ft-element-demo.js';
 
-    <template>
+import '@polymer/iron-flex-layout/iron-flex-layout-classes.js';
+import '@polymer/paper-checkbox/paper-checkbox.js';
+import '@polymer/polymer/polymer-legacy.js';
+import '../ft-element-demo.js';
+import { Polymer } from '@polymer/polymer/lib/legacy/polymer-fn.js';
+import { html } from '@polymer/polymer/lib/utils/html-tag.js';
 
+Polymer
+({
+  _template: html`
         <style include="iron-flex iron-flex-alignment iron-positioning"></style>
 
         <style>
@@ -44,20 +47,13 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
             }
         </style>
 
-        <ft-element-demo
-            show-config="true"
-            style="width:100%; height: 100%; ">
+        <ft-element-demo show-config="true" style="width:100%; height: 100%; ">
 
-            <div
-                    slot="config"
-                    style="width:300px; text-align:center; padding-top: 20px; ">
+            <div slot="config" style="width:300px; text-align:center; padding-top: 20px; ">
                 slot="config"
             </div>
 
-            <div
-                    slot="instance"
-                    class="layout horizontal wrap scroll"
-                    style="width:100%; height: 100%; ">
+            <div slot="instance" class="layout horizontal wrap scroll" style="width:100%; height: 100%; ">
 
                 <img src="img/beagle.png">
                 <img src="img/dog-in-bowl.png">
@@ -68,22 +64,11 @@ An element that can be used for the demo fixture for FileThis elements. Has a sl
             </div>
 
         </ft-element-demo>
+`,
 
-    </template>
+  is: 'demo-fixture',
 
-    <script>
-
-        Polymer
-        ({
-            is: 'demo-fixture',
-
-            properties:
-            {
-            }
-
-        });
-
-    </script>
-
-</dom-module>
-
+  properties:
+  {
+  }
+});
