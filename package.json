@@ -1,7 +1,7 @@
 {
   "description": "An element that can be used for the demo fixture for FileThis elements. Has a slot for the element to be demoed and a side bar for configuration options.",
-  "name": "filethis/ft-element-demo",
-  "version": "filethis/1.0.15",
+  "name": "ft-element-demo",
+  "version": "1.0.15",
   "resolutions": {
     "inherits": "2.0.3",
     "samsam": "1.1.3",
