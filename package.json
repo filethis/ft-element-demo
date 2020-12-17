@@ -13,18 +13,28 @@
     "@polymer/app-storage": "^3.0.0",
     "@polymer/iron-label": "^3.0.0",
     "@polymer/iron-pages": "^3.0.0",
+    "@polymer/iron-overlay": "^3.0.0",
     "@polymer/paper-button": "^3.0.0",
     "@polymer/paper-checkbox": "^3.0.0",
     "@polymer/paper-dropdown-menu": "^3.0.0",
     "@polymer/paper-item": "^3.0.0",
     "@polymer/paper-listbox": "^3.0.0",
-    "@polymer/polymer": "^3.0.0"
+    "@polymer/polymer": "^3.0.0",
+    "ft-accordion-item": "file:.yalc/ft-accordion-item",
+    "ft-clipboard-behavior": "file:.yalc/ft-clipboard-behavior",
+    "ft-confirmation-dialog": "file:.yalc/ft-confirmation-dialog",
+    "ft-error-behavior": "file:.yalc/ft-error-behavior",
+    "ft-http-behavior": "file:.yalc/ft-http-behavior",
+    "ft-labeled-icon-button": "file:.yalc/ft-labeled-icon-button",
+    "ft-styler": "file:.yalc/ft-styler",
+    "ft-url-param-behavior": "file:.yalc/ft-url-param-behavior",
+    "juicy-ace-editor": "^2.0.4"
   },
   "devDependencies": {
     "@polymer/iron-component-page": "^4.0.0",
     "@polymer/iron-demo-helpers": "^3.0.0",
     "@polymer/iron-test-helpers": "^3.0.0",
-    "wct-browser-legacy": "^1.0.1",
-    "@webcomponents/webcomponentsjs": "^2.0.0"
+    "@webcomponents/webcomponentsjs": "^2.0.0",
+    "wct-browser-legacy": "^1.0.1"
   }
 }
