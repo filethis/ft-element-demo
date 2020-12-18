@@ -38,8 +38,8 @@
     "@polymer/paper-item": "^3.0.0",
     "@polymer/paper-listbox": "^3.0.0",
     "@polymer/polymer": "^3.0.0",
-    "ft-accordion-item": "file:.yalc/ft-accordion-item",
-    "ft-clipboard-behavior": "file:.yalc/ft-clipboard-behavior",
+    "@filethis/ft-accordion-item": "^1.0.12",
+    "@filethis/ft-clipboard-behavior": "^1.0.10",
     "ft-confirmation-dialog": "file:.yalc/ft-confirmation-dialog",
     "ft-error-behavior": "file:.yalc/ft-error-behavior",
     "ft-http-behavior": "file:.yalc/ft-http-behavior",
@@ -54,5 +54,21 @@
     "@polymer/iron-test-helpers": "^3.0.0",
     "@webcomponents/webcomponentsjs": "^2.0.0",
     "wct-browser-legacy": "^1.0.1"
-  }
+  },
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/filethis/ft-element-demo.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/filethis/ft-element-demo/issues"
+  },
+  "homepage": "https://github.com/filethis/ft-element-demo#readme"
 }
