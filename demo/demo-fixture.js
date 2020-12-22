@@ -43,6 +43,8 @@ Polymer
             :host {
                 display: block;
                 overflow: hidden;
+                width: 600px;
+                height: 800px;
             }
         </style>
 

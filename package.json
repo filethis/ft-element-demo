@@ -1,6 +1,6 @@
 {
   "description": "An element that can be used for the demo fixture for FileThis elements. Has a slot for the element to be demoed and a side bar for configuration options.",
-  "name": "ft-element-demo",
+  "name": "@filethis/ft-element-demo",
   "version": "1.0.15",
   "resolutions": {
     "inherits": "2.0.3",
@@ -15,7 +15,6 @@
     "*.make",
     "*.png",
     "*.svg",
-    ".yalc/",
     "data/",
     "demo/",
     "test/",
@@ -31,7 +30,7 @@
     "@polymer/app-storage": "^3.0.0",
     "@polymer/iron-label": "^3.0.0",
     "@polymer/iron-pages": "^3.0.0",
-    "@polymer/iron-overlay": "^3.0.0",
+    "@polymer/iron-overlay-behavior": "^3.0.0",
     "@polymer/paper-button": "^3.0.0",
     "@polymer/paper-checkbox": "^3.0.0",
     "@polymer/paper-dropdown-menu": "^3.0.0",
@@ -40,13 +39,13 @@
     "@polymer/polymer": "^3.0.0",
     "@filethis/ft-accordion-item": "^1.0.12",
     "@filethis/ft-clipboard-behavior": "^1.0.10",
-    "ft-confirmation-dialog": "file:.yalc/ft-confirmation-dialog",
-    "ft-error-behavior": "file:.yalc/ft-error-behavior",
-    "ft-http-behavior": "file:.yalc/ft-http-behavior",
-    "ft-labeled-icon-button": "file:.yalc/ft-labeled-icon-button",
-    "ft-styler": "file:.yalc/ft-styler",
-    "ft-url-param-behavior": "file:.yalc/ft-url-param-behavior",
-    "juicy-ace-editor": "^2.0.4"
+    "@filethis/ft-confirmation-dialog": "^1.0.24",
+    "@filethis/ft-error-behavior": "^1.0.22",
+    "@filethis/ft-http-behavior": "^1.0.22",
+    "@filethis/ft-labeled-icon-button": "^1.0.21",
+    "@filethis/ft-styler": "^1.0.12",
+    "@filethis/ft-url-param-behavior": "^1.0.10",
+    "@filethis/juicy-ace-editor": "^2.0.5-es6"
   },
   "devDependencies": {
     "@polymer/iron-component-page": "^4.0.0",

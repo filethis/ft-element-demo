@@ -28,7 +28,7 @@ An element that can be used as a header for an element demo. Displays the name o
 import '@polymer/iron-flex-layout/iron-flex-layout-classes.js';
 
 import '@polymer/iron-pages/iron-pages.js';
-import 'ft-labeled-icon-button/ft-labeled-icon-button.js';
+import '@filethis/ft-labeled-icon-button/ft-labeled-icon-button.js';
 import '@polymer/polymer/polymer-legacy.js';
 import { Polymer } from '@polymer/polymer/lib/legacy/polymer-fn.js';
 import { html } from '@polymer/polymer/lib/utils/html-tag.js';
