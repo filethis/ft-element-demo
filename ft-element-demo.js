@@ -252,13 +252,13 @@ Polymer({
       latestDropinVersion: {
           type: String,
           notify: true,
-          value: "2.0.1"
+          value: "3.0.0"
       },
 
       latestReleaseVersion: {
           type: String,
           notify: true,
-          value: "2.0.8"
+          value: "3.0.0"
       },
 
       showHeader: {
@@ -511,7 +511,7 @@ Polymer({
       var hasSettingsElements = !!settingsElements;
 
       // TODO:
-      var styling = "                    /* None*/\n";
+      var styling = "                        /* None*/\n";
       var hasStyling = !!styling;
 
       var pageCodeTemplate = instance.getPageCodeTemplate(isDropIn, hasStyling, hasSettingsImports, hasSettingsElements);
@@ -563,7 +563,7 @@ Polymer({
       var settingsElements = "";
       var configurations = this.configurations;
       var count = configurations.length;
-      var indent = "            ";
+      var indent = "                    ";
       for (var index = 0;
            index < count;
            index++)
