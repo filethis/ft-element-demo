@@ -28,7 +28,6 @@ import '@filethis/ft-clipboard-behavior/ft-clipboard-behavior.js';
 import '@filethis/ft-labeled-icon-button/ft-labeled-icon-button.js';
 import '@polymer/iron-flex-layout/iron-flex-layout-classes.js';
 import '@filethis/juicy-ace-editor/juicy-ace-editor-module.js';
-import '@polymer/marked-element/marked-element.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-checkbox/paper-checkbox.js';
 import '@polymer/paper-dialog/paper-dialog.js';
